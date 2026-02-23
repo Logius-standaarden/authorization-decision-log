@@ -1,4 +1,5 @@
 import { loadRespecWithConfiguration } from "https://logius-standaarden.github.io/publicatie/respec/organisation-config.mjs";
+import { generateMermaidFigures } from "https://logius-standaarden.github.io/publicatie/respec/plugins/mermaid.mjs";
 
 loadRespecWithConfiguration({
   useLogo: true,
@@ -35,6 +36,8 @@ loadRespecWithConfiguration({
       }
     ],
   github: "https://github.com/Logius-standaarden/authorization-decision-log",
+
+  postProcess: [generateMermaidFigures],
 
   localBiblio: {
     "AuthZen": {
