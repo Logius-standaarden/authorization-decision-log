@@ -17,9 +17,9 @@ The inputs for records in the Authorization Decision Log come from the following
 </figure>
 
 
-In a federated context, such as introduced by [[FSC - Core]], both the consumer outway and provider inway function as a PEP for incoming and outgoing requests. Both the consumer and the provider ask an internal PDP to decide on allowing the request. Both of these decisions can be logged using this standard.
+In a federated context, such as introduced by [[FSC-Core]], both the consumer outway and provider inway function as a PEP for incoming and outgoing requests. Both the consumer and the provider ask an internal PDP to decide on allowing the request. Both of these decisions can be logged using this standard.
 
-When combined with tracing headers such as [[trace-context]] introduced by [[?Logboek dataverwerkingen]] and the FSC Transaction ID used in [[FSC - Logging]], this enables full traceability across complex multi-organizational processing chains.
+When combined with tracing headers such as [[trace-context]] introduced by [[?Logboek dataverwerkingen]] and the FSC Transaction ID used in [[FSC-Logging]], this enables full traceability across complex multi-organizational processing chains.
 
 See the sequence diagram below for an example of such a flow.
 
