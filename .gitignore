@@ -5,6 +5,5 @@
 *.xml
 *.ascii-art
 .DS_Store
-index.html
 public/
 /node_modules/

@@ -11,22 +11,20 @@ The goal of the standard is to enable the recreation of the environment in which
 The inputs for records in the Authorization Decision Log come from the following standard EAM or PxP components as introduced in [[?NIST.SP.800-162]] and adopt the information model introduced in [[AuthZEN]].
 
 <figure>
-
-![diagram](./images/eam-architecture.svg)
-<figcaption>EAM or PxP Architecture</figcaption>
+    <div class="mermaid" data-figure-name="eam-architecture.mermaid"></div>
+    <figcaption>EAM or PxP Architecture</figcaption>
 </figure>
 
 
-In a federated context, such as introduced by [[FSC - Core]], both the consumer outway and provider inway function as a PEP for incoming and outgoing requests. Both the consumer and the provider ask an internal PDP to decide on allowing the request. Both of these decisions can be logged using this standard.
+In a federated context, such as introduced by [[FSC-Core]], both the consumer outway and provider inway function as a PEP for incoming and outgoing requests. Both the consumer and the provider ask an internal PDP to decide on allowing the request. Both of these decisions can be logged using this standard.
 
-When combined with tracing headers such as [[trace-context]] introduced by [[?Logboek dataverwerkingen]] and the FSC Transaction ID used in [[FSC - Logging]], this enables full traceability across complex multi-organizational processing chains.
+When combined with tracing headers such as [[trace-context]] introduced by [[?Logboek dataverwerkingen]] and the FSC Transaction ID used in [[FSC-Logging]], this enables full traceability across complex multi-organizational processing chains.
 
 See the sequence diagram below for an example of such a flow.
 
 <figure>
-
-![diagram](./images/federated-logging.svg)
-<figcaption>Decision logging in federated context</figcaption>
+    <div class="mermaid" data-figure-name="federated-logging.mermaid"></div>
+    <figcaption>Decision logging in federated context</figcaption>
 </figure>
 
 
@@ -81,9 +79,8 @@ See [[[#information-management]]] for an overview of various aspects which *MAY*
 ### Writing a log record after an authorization decision
 
 <figure>
-
-![diagram](./images/writing-log-record.svg)
-<figcaption>Writing a log record after an authorization decision</figcaption>
+    <div class="mermaid" data-figure-name="writing-log-record.mermaid"></div>
+    <figcaption>Writing a log record after an authorization decision</figcaption>
 </figure>
 
 To provide accountability for historical authorization decisions it must be possible to recreate the information and environment that affected the decision. The PDP provides the information required for this to the Authorization Decision Log in the form of a Log Record, as defined in the specification below. 

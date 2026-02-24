@@ -36,7 +36,7 @@ It is *RECOMMENDED* to use [[trace-context]] to identify requests by implementin
 | `trace_id`       | 16 byte   | Unique identifier of trace that follows data processing         |
 | `span_id`        | 8 byte    | Unique identifier of span within the data processing            |
 
-When requests incorporate [[FSC - Logging]], the following field *SHOULD* be implemented:
+When requests incorporate [[FSC-Logging]], the following field *SHOULD* be implemented:
 
 | Field            | Type    | Description                                                       |
 |------------------|---------|-------------------------------------------------------------------|
@@ -65,7 +65,7 @@ Implementations *MAY* include additional fields. Such fields *MUST NOT* alter th
 
 Each log record should be uniquely identified. Using these identifiers the log entry can be related to other logs and vice-versa.
 
-The specification supports a number of different identifiers: a W3C Trace Context to integrate with [[Logboek dataverwerkingen]], a transaction id to integrate with [[FSC - Logging]], and a generic ID for when neither of the other identifiers are available.
+The specification supports a number of different identifiers: a W3C Trace Context to integrate with [[logboek dataverwerkingen]], a transaction id to integrate with [[FSC-Logging]], and a generic ID for when neither of the other identifiers are available.
 
 #### W3C Trace Context {#spec-trace-context}
 
@@ -78,7 +78,7 @@ The `span_id` field is an 8-byte unique identifier that represents the specific 
 The `transaction_id` field is a string value that represents the FSC transaction to which this request belongs. If a W3C trace context is available it should also be included.
 
 <div class="note">
-The Authorization Decision Log and the FSC Log have the same granularity and can thus be combined into a single physical log. This specification ensures that no fields are defined that conflict with those defined in [[FSC - Logging]].
+The Authorization Decision Log and the FSC Log have the same granularity and can thus be combined into a single physical log. This specification ensures that no fields are defined that conflict with those defined in [[FSC-Logging]].
 </div>
 
 #### Generic identifier {#spec-generic-id}
@@ -524,7 +524,7 @@ When system clocks are not aligned properly, a system may be asked to provide in
 </p>
 
 <p class="note" title="Usage of REST API Design Rules">
-In the context of REST APIs developed by the Dutch government the <a href="https://docs.geostandaarden.nl/api/API-Strategie-ext/#temporal">Temporal extension</a> of the [[REST API Design Rules]] can be used for this purpose.
+In the context of REST APIs developed by the Dutch government the <a href="https://docs.geostandaarden.nl/api/API-Strategie-ext/#temporal">Temporal extension</a> of the [[ADR]] can be used for this purpose.
 </p>
 
 ### Logged sources
