@@ -7,7 +7,7 @@
 
 Deze repository bevat de specificatie van het Logboek Toegangsbeslissingen, Engels Authorization Decision Log.
 
-Deze standaard is door VNG realisatie ontwikkeld vanuit een vernieuwingsvoorstel van de GDI, in het kader van het Federatief Datastelsel (FDS).
+Deze standaard is door VNG Realisatie ontwikkeld vanuit een vernieuwingsvoorstel van de GDI, in het kader van het Federatief Datastelsel (FDS).
 
 Voor de standaard zie: https://logius-standaarden.github.io/authorization-decision-log/
 
