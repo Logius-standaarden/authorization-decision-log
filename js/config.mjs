@@ -14,11 +14,16 @@ loadRespecWithConfiguration({
   prevVersion: [],
   editors:
     [
-      // {
-      //   name: "Project Federatieve Toegangsverlening",
-      //   company: "MinBZK",
-      //   companyURL: "https://federatieve-toegangsverlening-digilab-overheid-n-5d4b9badc9bcfa.gitlab.io/",
-      // }
+      {
+        company: "Logius",
+        companyURL: "https://www.logius.nl",
+        name: "Nil Barua"
+      },
+      { 
+        "company" : "Logius",
+        "companyURL" : "https://www.logius.nl",
+        "name" : "Stas Mironov"
+      }
     ],
   authors:
     [
@@ -52,7 +57,7 @@ loadRespecWithConfiguration({
       date: "February 25, 2019"
     },
     "ISO/IEC 27001:2022": {
-      href: "https://www.iso.org/standard/27001.html",
+      href: "https://www.iso.org/standard/27001",
       title: "Information security, cybersecurity and privacy protection — Information security management systems — Requirements",
       date: "2022-10"
     },
