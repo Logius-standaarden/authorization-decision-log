@@ -7,7 +7,7 @@ loadRespecWithConfiguration({
   license: "cc-by",
   specStatus: "WV",
   specType: "ST",
-  pubDomain: "dk",
+  pubDomain: "ftv",
   shortName: "authorization-decision-log",
   publishDate: "2024-05-19",
   publishVersion: "0.0.1",
@@ -67,7 +67,7 @@ loadRespecWithConfiguration({
       date: "2022-02"
     },
     "BIO2": {
-      href: "https://www.bio-overheid.nl/media/cs5ctudu/20250924-baseline-informatiebeveiliging-overheid-2-bio2-v12-def.pdf?csf=1&web=1&e=9JoWOT",
+      href: "https://www.bio-overheid.nl/media/cs5ctudu/20250924-baseline-informatiebeveiliging-overheid-2-bio2-v12-def.pdf",
       title: "Baseline Informatiebeveiliging Overheid 2",
       date: "24 september 2025"
     }
