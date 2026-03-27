@@ -14,11 +14,16 @@ loadRespecWithConfiguration({
   prevVersion: [],
   editors:
     [
-      // {
-      //   name: "Project Federatieve Toegangsverlening",
-      //   company: "MinBZK",
-      //   companyURL: "https://federatieve-toegangsverlening-digilab-overheid-n-5d4b9badc9bcfa.gitlab.io/",
-      // }
+      {
+        company: "Logius",
+        companyURL: "https://www.logius.nl",
+        name: "Nil Barua"
+      },
+      { 
+        "company" : "Logius",
+        "companyURL" : "https://www.logius.nl",
+        "name" : "Stas Mironov"
+      }
     ],
   authors:
     [
