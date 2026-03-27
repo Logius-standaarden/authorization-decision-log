@@ -8,7 +8,7 @@ loadRespecWithConfiguration({
   specStatus: "WV",
   specType: "ST",
   pubDomain: "ftv",
-  shortName: "authorization-decision-log",
+  shortName: "adl",
   publishDate: "2024-05-19",
   publishVersion: "0.0.1",
   prevVersion: [],
