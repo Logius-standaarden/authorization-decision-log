@@ -11,7 +11,9 @@ loadRespecWithConfiguration({
   shortName: "adl",
   publishDate: "2024-05-19",
   publishVersion: "0.0.1",
+  // TODO: verwijder voor publicatie
   prevVersion: [],
+  latestVersion: "https://logius-standaarden.github.io/authorization-decision-log/",
   editors:
     [
       {
