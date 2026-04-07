@@ -84,7 +84,6 @@ At this level of detail log requests contain the following keys, as defined in [
 | `information`   | required  | [[[#spec-information]]]    |
 | `configuration` | required  | [[[#spec-configuration]]]  |
 
-
 ## Implications of levels
 
 The higher the level of detail, the more useful the log is for determining the context of an authorization decision. On the other hand, higher levels of detail also introduce challenges around scalability, technical feasibility, and security.

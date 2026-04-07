@@ -16,7 +16,6 @@ It is *RECOMMENDED* to use the OpenTelemetry Protocol (OTLP) for the interaction
 OpenTelemetry is a standard and open-source framework for managing, generating, collecting, and exporting telemetry data. Using this open standard can prevent vendor-specific integrations. OpenTelemetry is a CNCF incubating project.
 </div>
 
-
 ## Behavior
 
 Each decision log entry *SHOULD* be persisted to durable storage before the PDP provides a decision response to the PEP. If persistence of log entries is not confirmed, historical decisions may end up not being logged.
@@ -27,7 +26,7 @@ See [[[#information-management]]] for an overview of additional behavior that *M
 
 ## Interface
 
-The interface *MUST* have fields that can identify the request. 
+The interface *MUST* have fields that can identify the request.
 
 It is *RECOMMENDED* to use [[trace-context]] to identify requests by implementing the following fields:
 
@@ -83,39 +82,43 @@ The Authorization Decision Log and the FSC Log have the same granularity and can
 
 #### Generic identifier {#spec-generic-id}
 
-If none of the other identifiers can be supported, a generic fallback identifier can be included in the `id` field. 
+If none of the other identifiers can be supported, a generic fallback identifier can be included in the `id` field.
 
 This can be any value, simple or complex, which can contain any kind of request identifier.
 
-### Request and response 
+### Request and response
 
-The minimal information required for an entry in the log consists of a request for a decision and a response with the evaluated decision. 
+The minimal information required for an entry in the log consists of a request for a decision and a response with the evaluated decision.
 
 This section describes the key fields required for logging this request/response cycle.
 
 #### Timestamp {#spec-timestamp}
+
 The `timestamp` field represents the exact point in time when the authorization decision was made. The timestamp *SHOULD* be in [[RFC3339]] format to ensure consistent interpretation across different systems and regions.
 
 #### Type {#spec-type}
-The `type` field represents the type of request that was made. This value identifies the AuthZEN endpoint that was invoked. 
 
-Its value *MUST* be a string containing the key value of the relevant endpoint as defined in "Endpoint Parameters" of the "Policy Decision Point Metadata" as defined in [[AuthZEN]] with the `_endpoint` suffix omitted. 
+The `type` field represents the type of request that was made. This value identifies the AuthZEN endpoint that was invoked.
+
+Its value *MUST* be a string containing the key value of the relevant endpoint as defined in "Endpoint Parameters" of the "Policy Decision Point Metadata" as defined in [[AuthZEN]] with the `_endpoint` suffix omitted.
 
 For example, a request to the URL defined by the `search_subject_endpoint` in the PDP metadata would have the `type` of `search_subject`.
 
 #### Request {#spec-request}
-The `request` field is an object that represents the input to the decision. This field *MUST* be in [[AuthZen]] format as defined for the given request type. 
+
+The `request` field is an object that represents the input to the decision. This field *MUST* be in [[AuthZen]] format as defined for the given request type.
 
 Portions of the request *MAY* be omitted for privacy reasons. If information is omitted, this omission *SHOULD* be documented or indicated in the log record. If the omitted information was used by the Policy Decision Point, then full accountability can no longer be provided.
 
 #### Response {#spec-response}
-The `response` field is an object that represents the output of the decision. This field *MUST* be in [[AuthZen]] format as defined for the given request type. 
+
+The `response` field is an object that represents the output of the decision. This field *MUST* be in [[AuthZen]] format as defined for the given request type.
 
 Portions of the response *MAY* be omitted for privacy reasons. If information is omitted, this omission *SHOULD* be documented or indicated in the log record. If information that was used by the Policy Enforcement Point is omitted then full accountability can no longer be provided.
 
 #### Examples (non-normative)
 
-In the following example a manager called Alice attempts to approve a holiday request for a team member called Bob, but the request is denied because she does not have signing authority. 
+In the following example a manager called Alice attempts to approve a holiday request for a team member called Bob, but the request is denied because she does not have signing authority.
 
 Her browser submits the following request to the API:
 
@@ -129,6 +132,7 @@ traceparent: 00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01
 
 {"action":"approve"}
 ```
+
 </aside>
 
 The application, acting as the PEP, then submits the following HTTP request to the PDP:
@@ -143,25 +147,26 @@ Authorization: Bearer <pep-auth-token>
 traceparent: 00-28dbeec32e77635cc19bc3204ec56c41-893e1b2ac52d712f-01
 
 {
-	"subject": {
-		"type": "user",
-		"id": "alice"
-	},
-	"action": {
-		"name": "approve"
-	},
-	"resource": {
-		"type": "holiday-request",
-		"id": "446epbc8y7",
-		"properties": {
-			"employee": "bob"
-		}
-	},
-	"context": {
-		"traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
-	}
+    "subject": {
+        "type": "user",
+        "id": "alice"
+    },
+    "action": {
+        "name": "approve"
+    },
+    "resource": {
+        "type": "holiday-request",
+        "id": "446epbc8y7",
+        "properties": {
+            "employee": "bob"
+        }
+    },
+    "context": {
+        "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
+    }
 }
 ```
+
 </aside>
 
 The PDP then determines that Alice can't sign on behalf of the company and thus cannot approve the holiday request. It returns the following response:
@@ -170,14 +175,15 @@ The PDP then determines that Alice can't sign on behalf of the company and thus 
 
 ```json
 {
-	"decision": false,
-	"context": {
-		"reason": {
-			"48": "No signing authority"
-		}
-	}
+    "decision": false,
+    "context": {
+        "reason": {
+            "48": "No signing authority"
+        }
+    }
 }
 ```
+
 </aside>
 
 The following JSON object contains a non-normative example of a log record describing this example:
@@ -186,50 +192,52 @@ The following JSON object contains a non-normative example of a log record descr
 
 ```json
 {
-	"timestamp": "2025-09-07T10:14:18Z",
-	"trace_id": "28dbeec32e77635cc19bc3204ec56c41",
-	"span_id": "893e1b2ac52d712f",
-	"type": "evaluation",
-	"request": {
-		"subject": {
-			"type": "user",
-			"id": "alice"
-		},
-		"action": {
-			"name": "approve"
-		},
-		"resource": {
-			"type": "holiday-request",
-			"id": "446epbc8y7",
-			"properties": {
-				"employee": "bob"
-			}
-		},
-		"context": {
-			"traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
-		}
-	},
-	"response": {
-		"decision": false,
-		"context": {
-			"reason": {
-				"48": "No signing authority"
-			}
-		}
-	}
+    "timestamp": "2025-09-07T10:14:18Z",
+    "trace_id": "28dbeec32e77635cc19bc3204ec56c41",
+    "span_id": "893e1b2ac52d712f",
+    "type": "evaluation",
+    "request": {
+        "subject": {
+            "type": "user",
+            "id": "alice"
+        },
+        "action": {
+            "name": "approve"
+        },
+        "resource": {
+            "type": "holiday-request",
+            "id": "446epbc8y7",
+            "properties": {
+                "employee": "bob"
+            }
+        },
+        "context": {
+            "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
+        }
+    },
+    "response": {
+        "decision": false,
+        "context": {
+            "reason": {
+                "48": "No signing authority"
+            }
+        }
+    }
 }
 ```
+
 </aside>
 
 ### Policy Sources {#spec-policies}
 
 The `policies` field represents a versioned reference to the policies that the PDP used to evaluate the request. In a PxP architecture, this represents the information that would come from the Policy Administration Point (PAP).
 
-A PDP can have one or more sources of policies which can be individually versioned. To accommodate that the `policies` field is an object in which each key identifies a specific, versioned, policy source. 
+A PDP can have one or more sources of policies which can be individually versioned. To accommodate that the `policies` field is an object in which each key identifies a specific, versioned, policy source.
 
 All policy sources that have affected the decision *MUST* be included. The value associated with each key refers to a unique version of the policy source. The information in this field *MUST* be sufficient to retrieve all policies from the policy sources that were used in the authorization decision.
 
 Non-normative examples include:
+
 - Timestamp
 - Unique identifier
 - Semantic version
@@ -243,9 +251,10 @@ We can extend the example of the holiday-approval request by adding a reference 
 
 ```json
 {
-	"hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6"
+    "hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6"
 }
 ```
+
 </aside>
 
 More complex references can be achieved by using an object as the version identifier. If, for example, the HR application takes part in a federation with predefined policies for different maturity levels. The following non-normative example shows how those policies can be referenced using a semantic version combined with a filter for policies relevant to the current maturity level.
@@ -254,13 +263,14 @@ More complex references can be achieved by using an object as the version identi
 
 ```json
 {
-	"hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
-	"federation": {
-		"version": "2.7.1",
-		"filter": "maturity_level <= 3"
-	}
+    "hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
+    "federation": {
+        "version": "2.7.1",
+        "filter": "maturity_level <= 3"
+    }
 }
 ```
+
 </aside>
 
 The following JSON object contains a non-normative example of a log record describing this example:
@@ -269,54 +279,54 @@ The following JSON object contains a non-normative example of a log record descr
 
 ```json
 {
-	"timestamp": "2025-09-07T10:14:18Z",
-	"trace_id": "28dbeec32e77635cc19bc3204ec56c41",
-	"span_id": "893e1b2ac52d712f",
-	"type": "evaluation",
-	"request": {
-		"subject": {
-			"type": "user",
-			"id": "alice"
-		},
-		"action": {
-			"name": "approve"
-		},
-		"resource": {
-			"type": "holiday-request",
-			"id": "446epbc8y7",
-			"properties": {
-				"employee": "bob"
-			}
-		},
-		"context": {
-			"traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
-		}
-	},
-	"response": {
-		"decision": false,
-		"context": {
-			"reason": {
-				"48": "No signing authority"
-			}
-		}
-	},
-	"policies": {
-		"hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
-		"federation": {
-			"version": "2.7.1",
-			"filter": "maturity_level <= 3"
-		}
-	}
+    "timestamp": "2025-09-07T10:14:18Z",
+    "trace_id": "28dbeec32e77635cc19bc3204ec56c41",
+    "span_id": "893e1b2ac52d712f",
+    "type": "evaluation",
+    "request": {
+        "subject": {
+            "type": "user",
+            "id": "alice"
+        },
+        "action": {
+            "name": "approve"
+        },
+        "resource": {
+            "type": "holiday-request",
+            "id": "446epbc8y7",
+            "properties": {
+                "employee": "bob"
+            }
+        },
+        "context": {
+            "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
+        }
+    },
+    "response": {
+        "decision": false,
+        "context": {
+            "reason": {
+                "48": "No signing authority"
+            }
+        }
+    },
+    "policies": {
+        "hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
+        "federation": {
+            "version": "2.7.1",
+            "filter": "maturity_level <= 3"
+        }
+    }
 }
 ```
-</aside>
 
+</aside>
 
 ### Information Sources {#spec-information}
 
 The `information` field represents all the supporting information used in the evaluation of the access decision. In a PxP architecture, this field represents the information that would come from Policy Information Points (PIPs).
 
-It is an object in which each key identifies an information source. All information sources that have affected the decision *SHOULD* be included. The value of this field *SHOULD* either contain the information that was used in the access decision or be sufficient to retrieve the information. 
+It is an object in which each key identifies an information source. All information sources that have affected the decision *SHOULD* be included. The value of this field *SHOULD* either contain the information that was used in the access decision or be sufficient to retrieve the information.
 
 #### Examples (non-normative)
 
@@ -329,6 +339,7 @@ GET /users/alice?fields=can_sign HTTP/1.1
 Host: hr.example.com
 traceparent: 00-28dbeec32e77635cc19bc3204ec56c41-836ff5286112f460-01
 ```
+
 </aside>
 
 And the API returns the following response.
@@ -337,62 +348,64 @@ And the API returns the following response.
 
 ```json
 {
-	"can_sign": false
+    "can_sign": false
 }
 ```
+
 </aside>
 
-The following JSON object contains a non-normative example of a log record describing this example. 
+The following JSON object contains a non-normative example of a log record describing this example.
 
 <aside class="example" title="Log record of denied holiday approval">
 
 ```json
 {
-	"timestamp": "2025-09-07T10:14:18Z",
-	"trace_id": "28dbeec32e77635cc19bc3204ec56c41",
-	"span_id": "893e1b2ac52d712f",
-	"type": "evaluation",
-	"request": {
-		"subject": {
-			"type": "user",
-			"id": "alice"
-		},
-		"action": {
-			"name": "approve"
-		},
-		"resource": {
-			"type": "holiday-request",
-			"id": "446epbc8y7",
-			"properties": {
-				"employee": "bob"
-			}
-		},
-		"context": {
-			"traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
-		}
-	},
-	"response": {
-		"decision": false,
-		"context": {
-			"reason": {
-				"48": "No signing authority"
-			}
-		}
-	},
-	"policies": {
-		"hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
-		"federation": {
-			"version": "2.7.1",
-			"filter": "maturity_level <= 3"
-		}
-	},
-	"information": {
-		"can-sign-api": {
-			"can_sign": false
-		}
-	}
+    "timestamp": "2025-09-07T10:14:18Z",
+    "trace_id": "28dbeec32e77635cc19bc3204ec56c41",
+    "span_id": "893e1b2ac52d712f",
+    "type": "evaluation",
+    "request": {
+        "subject": {
+            "type": "user",
+            "id": "alice"
+        },
+        "action": {
+            "name": "approve"
+        },
+        "resource": {
+            "type": "holiday-request",
+            "id": "446epbc8y7",
+            "properties": {
+                "employee": "bob"
+            }
+        },
+        "context": {
+            "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
+        }
+    },
+    "response": {
+        "decision": false,
+        "context": {
+            "reason": {
+                "48": "No signing authority"
+            }
+        }
+    },
+    "policies": {
+        "hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
+        "federation": {
+            "version": "2.7.1",
+            "filter": "maturity_level <= 3"
+        }
+    },
+    "information": {
+        "can-sign-api": {
+            "can_sign": false
+        }
+    }
 }
 ```
+
 </aside>
 
 <p class="note" title="Source references to reduce data duplication">
@@ -406,6 +419,7 @@ The `configuration` field represents the information required to recreate the so
 It is an object in which each key identifies a configuration source. All configuration sources that have affected the decision *SHOULD* be included. The value of this field *SHOULD* either contain the configuration that was used in the access decision or be sufficient to retrieve the configuration.
 
 Non-normative examples include:
+
 - Configuration of the policy engine (PDP)
 - Version of the policy language
 - Identifier or hostname of the PDP in case multiple PDPs are used
@@ -420,55 +434,56 @@ In the example below we extend the holiday approval request example by describin
 
 ```json
 {
-	"timestamp": "2025-09-07T10:14:18Z",
-	"trace_id": "28dbeec32e77635cc19bc3204ec56c41",
-	"span_id": "893e1b2ac52d712f",
-	"type": "evaluation",
-	"request": {
-		"subject": {
-			"type": "user",
-			"id": "alice"
-		},
-		"action": {
-			"name": "approve"
-		},
-		"resource": {
-			"type": "holiday-request",
-			"id": "446epbc8y7",
-			"properties": {
-				"employee": "bob"
-			}
-		},
-		"context": {
-			"traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
-		}
-	},
-	"response": {
-		"decision": false,
-		"context": {
-			"reason": {
-				"48": "No signing authority"
-			}
-		}
-	},
-	"policies": {
-		"hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
-		"federation": {
-			"version": "2.7.1",
-			"filter": "maturity_level <= 3"
-		}
-	},
-	"information": {
-		"can-sign-api": {
-			"can_sign": false
-		}
-	},
-	"configuration": {
-		"opa_version": "1.10.0",
-		"can-sign-api": "https://hr.example.com/users/{subject.id}?fields=can_sign"
-	}
+    "timestamp": "2025-09-07T10:14:18Z",
+    "trace_id": "28dbeec32e77635cc19bc3204ec56c41",
+    "span_id": "893e1b2ac52d712f",
+    "type": "evaluation",
+    "request": {
+        "subject": {
+            "type": "user",
+            "id": "alice"
+        },
+        "action": {
+            "name": "approve"
+        },
+        "resource": {
+            "type": "holiday-request",
+            "id": "446epbc8y7",
+            "properties": {
+                "employee": "bob"
+            }
+        },
+        "context": {
+            "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
+        }
+    },
+    "response": {
+        "decision": false,
+        "context": {
+            "reason": {
+                "48": "No signing authority"
+            }
+        }
+    },
+    "policies": {
+        "hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
+        "federation": {
+            "version": "2.7.1",
+            "filter": "maturity_level <= 3"
+        }
+    },
+    "information": {
+        "can-sign-api": {
+            "can_sign": false
+        }
+    },
+    "configuration": {
+        "opa_version": "1.10.0",
+        "can-sign-api": "https://hr.example.com/users/{subject.id}?fields=can_sign"
+    }
 }
 ```
+
 </aside>
 
 <p class="note" title="Source references to reduce data duplication">
@@ -485,7 +500,7 @@ To address this we describe several methods of referencing sources from the log 
 
 ### Versioned sources
 
-Some information sources offer the ability to 'time-travel' by providing a version at which to query. In such cases, the data itself may be omitted and the version can be stored instead.  
+Some information sources offer the ability to 'time-travel' by providing a version at which to query. In such cases, the data itself may be omitted and the version can be stored instead.
 
 The version identifier can be a simple value, such as a string or number, or a complex object, such as an array or object containing multiple version identifiers.
 
@@ -495,9 +510,10 @@ The following non-normative example shows a reference to a specific semantic ver
 
 ```json
 {
-	"traffic-policy": "gmb-2025-94604@1.1"
+    "traffic-policy": "gmb-2025-94604@1.1"
 }
 ```
+
 </aside>
 
 In a complex case, such as limiting requests for open data per IP per minute across a large number of servers, the version could also consist of an array of partition offsets in a Kafka stream of HTTP request.
@@ -506,16 +522,17 @@ In a complex case, such as limiting requests for open data per IP per minute acr
 
 ```json
 {
-	"nginx-requests": [ 8376912, 8368118, 8377785, 8386285, 8383526 ]
+    "nginx-requests": [ 8376912, 8368118, 8377785, 8386285, 8383526 ]
 }
 ```
+
 </aside>
 
 ### Temporal sources
 
-In case the source of information offers the ability to 'time-travel' by providing a timestamp at which to query, then the data itself may be omitted. 
+In case the source of information offers the ability to 'time-travel' by providing a timestamp at which to query, then the data itself may be omitted.
 
-It is *RECOMMENDED* to use the timestamp defined in the `time` field in the `context` of the `request` as the base time. In that case the information source *MAY* be omitted fully. 
+It is *RECOMMENDED* to use the timestamp defined in the `time` field in the `context` of the `request` as the base time. In that case the information source *MAY* be omitted fully.
 
 If a different timestamp is used, then it *SHOULD* be included in [[RFC3339]] format.
 
@@ -541,45 +558,46 @@ The following non-normative example shows a log record for a request to find all
 
 ```json
 {
-	"timestamp": "2025-09-07T10:15:36Z",
-	"trace_id": "28dbeec32e77635cc19bc3204ec56c41",
-	"span_id": "17c59821784ee492",
-	"type": "search_subject",
-	"request": {
-		"subject": {
-			"type": "user"
-		},
-		"action": {
-			"name": "approve"
-		},
-		"resource": {
-			"type": "holiday-request",
-			"id": "446epbc8y7",
-			"properties": {
-				"employee": "bob"
-			}
-		}
-	},
-	"response": {
-		"results": [
-			{
-				"type": "user",
-				"id": "carol"
-			},
-			{
-				"type": "user",
-				"id": "dan"
-			}
-		]
-	},
-	"policies": {
-		"git": "e4c15a063048367da367d5588d703b5e4a6b760e"
-	},
-	"information": {
-		"managers-api": "45deb36022f53afa"
-	}
+    "timestamp": "2025-09-07T10:15:36Z",
+    "trace_id": "28dbeec32e77635cc19bc3204ec56c41",
+    "span_id": "17c59821784ee492",
+    "type": "search_subject",
+    "request": {
+        "subject": {
+            "type": "user"
+        },
+        "action": {
+            "name": "approve"
+        },
+        "resource": {
+            "type": "holiday-request",
+            "id": "446epbc8y7",
+            "properties": {
+                "employee": "bob"
+            }
+        }
+    },
+    "response": {
+        "results": [
+            {
+                "type": "user",
+                "id": "carol"
+            },
+            {
+                "type": "user",
+                "id": "dan"
+            }
+        ]
+    },
+    "policies": {
+        "git": "e4c15a063048367da367d5588d703b5e4a6b760e"
+    },
+    "information": {
+        "managers-api": "45deb36022f53afa"
+    }
 }
 ```
+
 </aside>
 
 Which would result in the following WARC entries logging the REST API call to the HR system:
@@ -611,15 +629,16 @@ Content-Type: application/json
 Content-Length: 107
 
 {
-	"alice": {
-		"can_sign": false
-	},
-	"carol": {
-		"can_sign": true
-	},
-	"dan": {
-		"can_sign": true
-	}
+    "alice": {
+        "can_sign": false
+    },
+    "carol": {
+        "can_sign": true
+    },
+    "dan": {
+        "can_sign": true
+    }
 }
 ```
+
 </aside>

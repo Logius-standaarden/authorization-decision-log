@@ -15,7 +15,6 @@ The inputs for records in the Authorization Decision Log come from the following
     <figcaption>EAM or PxP Architecture</figcaption>
 </figure>
 
-
 In a federated context, such as introduced by [[FSC-Core]], both the consumer outway and provider inway function as a PEP for incoming and outgoing requests. Both the consumer and the provider ask an internal PDP to decide on allowing the request. Both of these decisions can be logged using this standard.
 
 When combined with tracing headers such as [[trace-context]] introduced by [[?Logboek dataverwerkingen]] and the FSC Transaction ID used in [[FSC-Logging]], this enables full traceability across complex multi-organizational processing chains.
@@ -26,7 +25,6 @@ See the sequence diagram below for an example of such a flow.
     <div class="mermaid" data-figure-name="federated-logging.mermaid"></div>
     <figcaption>Decision logging in federated context</figcaption>
 </figure>
-
 
 ## Components
 
@@ -65,6 +63,7 @@ This section delineates the scope of the standard.
 The specification defines an interface for persisting log entries. This is the component that *MUST* be consistent across organizations to ensure interoperability.
 
 The management of a log, however, is left to the discretion of individual implementations. Consequently, the specification does NOT define behavior or interfaces for:
+
 - deleting or modifying log entries
 - managing access to the log
 - ensuring long-term accessibility
@@ -83,6 +82,6 @@ See [[[#information-management]]] for an overview of various aspects which *MAY*
     <figcaption>Writing a log record after an authorization decision</figcaption>
 </figure>
 
-To provide accountability for historical authorization decisions it must be possible to recreate the information and environment that affected the decision. The PDP provides the information required for this to the Authorization Decision Log in the form of a Log Record, as defined in the specification below. 
+To provide accountability for historical authorization decisions it must be possible to recreate the information and environment that affected the decision. The PDP provides the information required for this to the Authorization Decision Log in the form of a Log Record, as defined in the specification below.
 
 The PDP *SHOULD* ensure that a Log Record has been persisted to durable storage before providing the Policy Enforcement Point with the decision. The PDP then flushes this durable storage to the Authorization Decision Log, ensuring that the log record has been persisted and can be used to provide accountability when needed.
