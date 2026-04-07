@@ -18,28 +18,31 @@ loadRespecWithConfiguration({
     [
       {
         company: "Logius",
-        companyURL: "https://www.logius.nl",
+        companyURL: "https://logius.nl",
         name: "Nil Barua"
       },
-      { 
-        "company" : "Logius",
-        "companyURL" : "https://www.logius.nl",
-        "name" : "Stas Mironov"
+      {
+        company : "Logius",
+        companyURL : "https://logius.nl",
+        name : "Stas Mironov"
       }
     ],
   authors:
     [
       {
         name: "Maikel Hofman",
-        company: "VNG Realisatie"
+        company: "VNG Realisatie",
+        companyURL: "https://vng.nl/artikelen/vng-realisatie"
       },
       {
         name: "Guus van der Meer",
-        company: "Vecozo"
+        company: "Vecozo",
+        companyURL: "https://www.vecozo.nl/"
       },
       {
         name: "Michiel Trimpe",
-        company: "VNG Realisatie"
+        company: "VNG Realisatie",
+        companyURL: "https://vng.nl/artikelen/vng-realisatie"
       }
     ],
   github: "https://github.com/Logius-standaarden/authorization-decision-log",
