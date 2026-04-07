@@ -56,7 +56,7 @@ loadRespecWithConfiguration({
       authors: ["O. Gazitt", "D. Brossard", "A. Tulshibagwale"]
     },
     "NIST.SP.800-162": {
-      href: "https://www.nist.gov/publications/guide-attribute-based-access-control-abac-definition-and-considerations-1",
+      href: "https://doi.org/10.6028/NIST.SP.800-162",
       title: "Guide to Attribute Based Access Control (ABAC) Definition and Considerations",
       authors: ["Chung Tong Hu", "David F. Ferraiolo", "David R. Kuhn"],
       date: "February 25, 2019"

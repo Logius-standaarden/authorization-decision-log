@@ -20,14 +20,14 @@ The decision request and response <i>MAY</i> contain all information required fo
 
 At this level of detail log requests contain the following keys, as defined in [[[#specifications]]]:
 
-| Field          | Required  | Reference                 |
-|----------------|-----------|---------------------------|
-| `trace_id`     | optional  | [[[#spec-trace-context]]] |
-| `span_id`      | optional  | [[[#spec-trace-context]]] |
-| `timestamp`    | required  | [[[#spec-timestamp]]]     |
-| `type`         | required  | [[[#spec-type]]]          |
-| `request`      | required  | [[[#spec-request]]]       |
-| `response`     | required  | [[[#spec-response]]]      |
+| Field          | Required  |
+|----------------|-----------|
+| [`trace_id`](#trace_id)     | required  |
+| [`span_id`](#span_id)      | required  |
+| [`timestamp`](#timestamp)    | required  |
+| [`type`](#type)         | required  |
+| [`request`](#request)      | required  |
+| [`response`](#response)     | required  |
 
 ### Level 2: Decision and Policies
 
@@ -35,7 +35,7 @@ In addition to the request and response, the exact version of the policies that 
 
 At this level of detail log requests contain the following keys, as defined in [[[#specifications]]]:
 
-| Field          | Required  | Reference                 |
+<!-- | Field          | Required  | Reference                 |
 |----------------|-----------|---------------------------|
 | `trace_id`     | optional  | [[[#spec-trace-context]]] |
 | `span_id`      | optional  | [[[#spec-trace-context]]] |
@@ -43,7 +43,7 @@ At this level of detail log requests contain the following keys, as defined in [
 | `type`         | required  | [[[#spec-type]]]          |
 | `request`      | required  | [[[#spec-request]]]       |
 | `response`     | required  | [[[#spec-response]]]      |
-| `policies`     | required  | [[[#spec-policies]]]      |
+| `policies`     | required  | [[[#spec-policies]]]      | -->
 
 ### Level 3: All Information Sources
 
@@ -51,7 +51,7 @@ All information used in the evaluation can be programmatically retrieved. This a
 
 At this level of detail log requests contain the following keys, as defined in [[[#specifications]]]:
 
-| Field          | Required  | Reference                 |
+<!-- | Field          | Required  | Reference                 |
 |----------------|-----------|---------------------------|
 | `trace_id`     | optional  | [[[#spec-trace-context]]] |
 | `span_id`      | optional  | [[[#spec-trace-context]]] |
@@ -60,7 +60,7 @@ At this level of detail log requests contain the following keys, as defined in [
 | `request`      | required  | [[[#spec-request]]]       |
 | `response`     | required  | [[[#spec-response]]]      |
 | `policies`     | required  | [[[#spec-policies]]]      |
-| `information`  | required  | [[[#spec-information]]]   |
+| `information`  | required  | [[[#spec-information]]]   | -->
 
 ### Level 4: Full Environment
 
@@ -72,7 +72,7 @@ The configuration of all components that influence the decision should be includ
 
 At this level of detail log requests contain the following keys, as defined in [[[#specifications]]]:
 
-| Field           | Required  | Reference                  |
+<!-- | Field           | Required  | Reference                  |
 |-----------------|-----------|----------------------------|
 | `trace_id`      | optional  | [[[#spec-trace-context]]]  |
 | `span_id`       | optional  | [[[#spec-trace-context]]]  |
@@ -82,7 +82,7 @@ At this level of detail log requests contain the following keys, as defined in [
 | `response`      | required  | [[[#spec-response]]]       |
 | `policies`      | required  | [[[#spec-policies]]]       |
 | `information`   | required  | [[[#spec-information]]]    |
-| `configuration` | required  | [[[#spec-configuration]]]  |
+| `configuration` | required  | [[[#spec-configuration]]]  | -->
 
 ## Implications of levels
 

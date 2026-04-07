@@ -1,7 +1,5 @@
 # Information Management and Compliance {#information-management}
 
-This, non-authoritative, section addresses the governance, security, and privacy-compliance aspects of managing an Authorization Decision Log (ADL).
-
 Conformance to this standard does not, by itself, guarantee legal or regulatory compliance. The implementing organization is solely responsible for ensuring its implementation adheres to all applicable frameworks, such as the General Data Protection Regulation (GDPR / AVG) and relevant security baselines, such as [[?ISO/IEC 27001:2022]], [[?ISO/IEC 27002:2022]], and [[?BIO2]]. Each organization is responsible for its own Authorization Decision Log. There is no central log, although logs of several organizations can be aggregated if desired.
 
 The following sections list aspects that should be taken into consideration when creating a compliant and secure logging solution.
@@ -62,4 +60,4 @@ Key concerns for ensuring security and integrity include:
 - **Encryption at Rest**: All log data should be encrypted at rest. It's recommended to manage this using a Key Management System (KMS).
 - **Data Integrity**: The log should be configured as append-only storage (WORM) to prevent undetected modification or deletion. Mechanisms such as a cryptographic hash chains and periodic cryptographic sealing can be used to ensure integrity and non-repudiation of logs.
 - **Time Synchronization**: All systems involved in generating and storing logs should be synchronized to a trusted Network Time Protocol (NTP) source to ensure a reliable and accurate timeline of events.
-- **Ingestion**: The logging endpoint should be implemented as idempotent writes to an asynchronous, buffered service (e.g., using a durable queue) to mitigate latency and availability risks in the event of log-ingest failures.
+- *Ingestion*: The logging endpoint should be implemented as idempotent writes to an asynchronous, buffered service (e.g., using a durable queue) to mitigate latency and availability risks in the event of log-ingest failures.
