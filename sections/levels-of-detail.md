@@ -18,32 +18,14 @@ At the most basic level only the decision request and the decision response are 
 The decision request and response <i>MAY</i> contain all information required for an audit log, as described by [[?ISO/IEC 27002:2022]] and [[?BIO2]]. If that is the case, and all auditable actions are decided on by the PDP, the Authorization Decision Log <i>MAY</i> be used as an audit log.
 </p>
 
-At this level of detail log requests contain the following keys, as defined in [[[#specifications]]]:
+At this level of detail log requests contain all keys that are described as mandatory in [[[#specifications]]].
 
-| Field          | Required  |
-|----------------|-----------|
-| [`trace_id`](#trace_id)     | required  |
-| [`span_id`](#span_id)      | required  |
-| [`timestamp`](#timestamp)    | required  |
-| [`type`](#type)         | required  |
-| [`request`](#request)      | required  |
-| [`response`](#response)     | required  |
 
 ### Level 2: Decision and Policies
 
-In addition to the request and response, the exact version of the policies that were used to evaluate the request can be programmatically retrieved.
+In addition to the request and response, the exact version of the <a>policies</a> that were used to evaluate the request can be programmatically retrieved. This is can be achieved by incorporating the `policies`](#policies) field from [[[#specifications]]].
 
-At this level of detail log requests contain the following keys, as defined in [[[#specifications]]]:
 
-<!-- | Field          | Required  | Reference                 |
-|----------------|-----------|---------------------------|
-| `trace_id`     | optional  | [[[#spec-trace-context]]] |
-| `span_id`      | optional  | [[[#spec-trace-context]]] |
-| `timestamp`    | required  | [[[#spec-timestamp]]]     |
-| `type`         | required  | [[[#spec-type]]]          |
-| `request`      | required  | [[[#spec-request]]]       |
-| `response`     | required  | [[[#spec-response]]]      |
-| `policies`     | required  | [[[#spec-policies]]]      | -->
 
 ### Level 3: All Information Sources
 
