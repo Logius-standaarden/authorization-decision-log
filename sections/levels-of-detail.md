@@ -23,7 +23,7 @@ At this level of detail log requests contain all keys that are described as mand
 
 ### Level 2: Decision and Policies
 
-In addition to the request and response, the exact version of the <a>policies</a> that were used to evaluate the request can be programmatically retrieved. This is can be achieved by incorporating the `policies`](#policies) field from [[[#specifications]]].
+In addition to the request and response, the exact version of the <a>policies</a> that were used to evaluate the request can be programmatically retrieved. This is can be achieved by incorporating the [`policies`](#policies) field from [[[#specifications]]].
 
 
 
