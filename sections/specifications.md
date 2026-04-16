@@ -20,7 +20,7 @@ OpenTelemetry is a standard and open-source framework for managing, generating, 
 
 The log MUST enforce TLS on connections, in accordance with the standard practice established within the organization.
 
-## Interface
+## Interface {#Interface}
 
 The interface MUST have implement the following fields:
 
