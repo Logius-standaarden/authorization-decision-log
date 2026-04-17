@@ -24,18 +24,18 @@ The log MUST enforce TLS on connections, in accordance with the standard practic
 
 The interface MUST have implement the following fields:
 
-| Field                                | Type    | Mandatory? |
-|-------------------------------------|---------|-----------|
-| [`trace_id`](#trace_id)             | 16 byte | mandatory |
-| [`span_id`](#span_id)               | 8 byte  | mandatory |
-| [`timestamp`](#timestamp)         | timestamp  | mandatory |
-| [`type`](#timestamp)         | string  | mandatory |
-| [`request`](#request)             | object  | mandatory |
-| [`response`](#response)         | object  | mandatory |
-| [`policies`](#policies)         | object  | optional |
-| [`information`](#information)         | object  | optional |
-| [`configuration`](#configuration)         | object  | optional |
-| [`transaction_id`](#transaction_id)         | string  | optional |
+| Field | Type | Mandatory? |
+| --- | --- | --- |
+| [`trace_id`](#trace_id) | 16 byte | mandatory |
+| [`span_id`](#span_id) | 8 byte | mandatory |
+| [`timestamp`](#timestamp) | timestamp | mandatory |
+| [`type`](#timestamp) | string | mandatory |
+| [`request`](#request) | object | mandatory |
+| [`response`](#response) | object | mandatory |
+| [`policies`](#policies) | object | optional |
+| [`information`](#information) | object | optional |
+| [`configuration`](#configuration) | object | optional |
+| [`transaction_id`](#transaction_id) | string | optional |
 
 ### `trace_id`
 

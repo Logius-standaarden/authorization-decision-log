@@ -136,7 +136,7 @@ A <a>log record</a> as expressed as a JSON object for this scenario:
 
 In addition to the request and response, one can refer to the exact version of the <a>policies</a> that were used to evaluate the request. This can be achieved by incorporating the [`policies`](#policies) field.
 
-#### Example 
+#### Example
 
 We can extend the example of the holiday-approval request by adding a reference to a Git repository in which current HR approval policies are documented. In the example below the git hash of the version currently deployed together with the PDP is `6266d07750c44b4c9b05d0801b752c0ef884e4f6`.
 
@@ -219,7 +219,7 @@ A log record as expressed as a JSON object for this scenario:
 
 Furthermore, every piece of information used in the evaluation can also be programmatically retrieved, by providing the [`information`](#information) field. This allows full replayability, assuming the engine (PDP) behaves identically or can be manually recreated in the correct state, which is generally achievable.
 
-#### Example 
+#### Example
 
 In the example of the holiday approval, the ability to sign is accessed through the `can_sign` field of the user. The <a>Policy Information Point</a> called `can-sign-api` requests this via an API from the HR application using the request below:
 
