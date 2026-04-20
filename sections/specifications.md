@@ -16,6 +16,9 @@ It is RECOMMENDED to use [the OpenTelemetry Protocol (OTLP)](https://opentelemet
 OpenTelemetry is a standard and open-source framework for managing, generating, collecting, and exporting telemetry data. Using this open standard can prevent vendor-specific integrations. OpenTelemetry is a CNCF incubating project.
 </div>
 
+When utilising HTTP/1.1 [[RFC9112]] or HTTP/2 [[RFC9113]] for autorisation request in multiple systems, one MUST use the [[[trace-context]]] specification for exchange of metadata through traces.
+
+
 ## Behavior
 
 The log MUST enforce TLS on connections, in accordance with the standard practice established within the organization.
