@@ -18,10 +18,23 @@ OpenTelemetry is a standard and open-source framework for managing, generating, 
 
 When utilising HTTP/1.1 [[RFC9112]] or HTTP/2 [[RFC9113]] for autorisation request in multiple systems, one MUST use the [[[trace-context]]] specification for exchange of metadata through traces.
 
-
 ## Behavior
 
+Authorization decision processing MUST participate in distributed tracing as defined by the [[[trace-context]]] specification.
+
+### Trace propagation and initiation
+
+When a [=PEP=]initiates an authorization request to a [=PDP=], the following rules apply:
+
+- If the authorization request is part of an existing distributed trace, the [=PEP=] MUST propagate the active [`trace_id`](#trace_id) and parent `span_id` as defined by [[[trace-context]]].
+- If no trace context is present, the [=PEP=] MUST create a new trace and corresponding root span for the authorization request.
+- The [=PEP=] MUST create a span representing the authorization request and MUST propagate its context to the [=PDP=].
+
+This ensures that authorization decisions are consistently correlated with the broader transaction or request lifecycle in which they occur.
+
 The log MUST enforce TLS on connections, in accordance with the standard practice established within the organization.
+
+
 
 ## Interface {#Interface}
 
@@ -281,4 +294,3 @@ Content-Length: 107
 </aside>
 
 </section>
-
