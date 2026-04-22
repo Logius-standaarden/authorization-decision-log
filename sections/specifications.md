@@ -38,6 +38,16 @@ When a [=PEP=]initiates an authorization request to a [=PDP=], the following rul
 
 This ensures that authorization decisions are consistently correlated with the broader transaction or request lifecycle in which they occur.
 
+### PDP span model and sub-operations
+TODO: @mtrimpe
+
+kern -->
+
+All components participating in authorization decision processing (including PEPs, PDPs, PAPs, and PIPs):
+- MUST support distributed tracing context propagation
+- MUST preserve trace continuity across component boundaries
+- SHOULD ensure compatibility with OpenTelemetry and similar observability frameworks
+
 The log MUST enforce TLS on connections, in accordance with the standard practice established within the organization.
 
 
