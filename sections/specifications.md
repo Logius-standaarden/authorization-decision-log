@@ -16,7 +16,13 @@ It is RECOMMENDED to use [the OpenTelemetry Protocol (OTLP)](https://opentelemet
 OpenTelemetry is a standard and open-source framework for managing, generating, collecting, and exporting telemetry data. Using this open standard can prevent vendor-specific integrations. OpenTelemetry is a CNCF incubating project.
 </div>
 
-When utilising HTTP/1.1 [[RFC9112]] or HTTP/2 [[RFC9113]] for autorisation request in multiple systems, one MUST use the [[[trace-context]]] specification for exchange of metadata through traces.
+When using HTTP-based protocols (e.g., HTTP/1.1 [[RFC9112]] or HTTP/2 [[RFC9113]]), implementations MUST use the [[[trace-context]]] HTTP header format (`traceparent`, `tracestate`) for propagation.
+
+For non-HTTP protocols (e.g., gRPC, messaging systems), implementations MUST provide equivalent trace context propagation semantics, ensuring that `trace_id`, `span_id`, and parent relationships are preserved across boundaries.
+
+<div class="note">
+In the absence of a formally standardized propagation mechanism for a given protocol, implementations SHOULD adopt widely accepted conventions (e.g., OpenTelemetry context propagation) while maintaining semantic equivalence with [[[trace-context]]].
+</div>
 
 ## Behavior
 
