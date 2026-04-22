@@ -125,6 +125,8 @@ The Authorization Decision Log and the FSC Log have the same granularity and can
 
 </div>
 
+<section class="informative">
+
 ## Sources and referencing {#source-references}
 
 Policy, information and configuration sources MAY be included in the log directly.
@@ -277,3 +279,6 @@ Content-Length: 107
 ```
 
 </aside>
+
+</section>
+
