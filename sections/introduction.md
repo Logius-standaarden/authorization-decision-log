@@ -11,14 +11,6 @@ This standard defines a uniform approach for logging authorization decisions, en
 
 The standard provides a structured format for all contextual and environmental parameters that affect decisions. A full implementation of the standard allows historical decisions to be replayed for analysis.
 
-### Applicability
-
-Functionally, the standard is applicable to any API request. Organizationally, it applies to Dutch governmental bodies — such as the central government, provinces, municipalities, and water boards — as well as institutions in the public or semi-public sector.
-
-### Target Audience
-
-The target audience for the standard includes organizations involved in making and accounting for access decisions, both within their own organization and in collaborations with other parties. This may include the Dutch government and other relevant authorities.
-
 ## Terminology
 
 The following list defines terminology used throughout this document.
