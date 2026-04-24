@@ -26,7 +26,7 @@ In the absence of a formally standardized propagation mechanism for a given prot
 
 ## Behavior
 
-Authorization decision processing MUST participate in distributed tracing as defined by the [[[trace-context]]] specification.
+{{Authorization decision}} processing MUST participate in distributed tracing as defined by the [[[trace-context]]] specification.
 
 ### Trace propagation and initiation
 
@@ -36,7 +36,7 @@ When a [=PEP=]initiates an authorization request to a [=PDP=], the following rul
 - If no trace context is present, the [=PEP=] MUST create a new trace and corresponding root span for the authorization request.
 - The [=PEP=] MUST create a span representing the authorization request and MUST propagate its context to the [=PDP=].
 
-This ensures that authorization decisions are consistently correlated with the broader transaction or request lifecycle in which they occur.
+This ensures that {{authorization decisions}} are consistently correlated with the broader transaction or request lifecycle in which they occur.
 
 ### PDP span model and sub-operations
 
@@ -79,7 +79,7 @@ Unique identifier of span within the data processing
 
 ### `timestamp`
 
-The `timestamp` field represents the exact point in time when the authorization decision was made. The timestamp MUST be in [[RFC3339]] format to ensure consistent interpretation across different systems and regions.
+The `timestamp` field represents the exact point in time when the {{authorization decision}} was made. The timestamp MUST be in [[RFC3339]] format to ensure consistent interpretation across different systems and regions.
 
 ### `type`
 
@@ -109,7 +109,7 @@ The `policies` field represents a versioned reference to the policies that the P
 
 A PDP can have one or more sources of policies which can be individually versioned. To accommodate that the `policies` field is an object in which each key identifies a specific, versioned, policy source.
 
-All policy sources that have affected the decision MUST be included. The value associated with each key refers to a unique version of the policy source. The information in this field MUST be sufficient to retrieve all policies from the policy sources that were used in the authorization decision.
+All policy sources that have affected the decision MUST be included. The value associated with each key refers to a unique version of the policy source. The information in this field MUST be sufficient to retrieve all policies from the policy sources that were used in the {{authorization decision}}.
 
 <aside class="example">
 These could include:
@@ -216,7 +216,7 @@ For information sources that are logged in an external log, a request identifier
 
 It is RECOMMENDED to use the W3C Trace Context standard as the request identifier. Such a request SHOULD have the same `trace_id` as the request to the PDP, in which case the source reference can consist of only the value of the `span_id`.
 
-It is RECOMMENDED to log requests in the [[WARC]] format as it includes all request and response headers that may be used in the authorization decision.
+It is RECOMMENDED to log requests in the [[WARC]] format as it includes all request and response headers that may be used in the {{authorization decision}}.
 
 The following example shows a log record for a request to find all subjects capable of approving a holiday request:
 
