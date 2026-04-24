@@ -4,7 +4,7 @@ This section provides the specification for the protocols and interfaces to be u
 
 ## Protocols
 
-The protocols used between the engine and the log are not prescribed in this standard.
+The protocols used between the engine and the {{log}} are not prescribed in this standard.
 
 <div class="note">
 Note, by "the protocols" we mean the method of delivering messages between components. This standard does describe the interfaces of the messages themselves. The components <i>MUST</i> comply with the interfaces to ensure interoperability between component functionalities. The standard does not prescribe how that information is passed between components, as this depends on the technical/architectural choices made by software developers. This provides the freedom to apply the standard to almost any software solution.
