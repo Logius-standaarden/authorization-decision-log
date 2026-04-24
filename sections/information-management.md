@@ -14,7 +14,7 @@ When collecting personal data, the specific purposes for logging (e.g., operatio
 
 ### Data Minimization
 
-A core principle is to avoid storing unnecessary information, especially sensitive data. The goal is to make the log precise, compact, and manageable. Instead of duplicating large amounts of (personal) data, prefer storing only the data used in the decision or even just a reference that allows the state at the time of the decision to be recreated.
+A core principle is to avoid storing unnecessary information, especially sensitive data. The goal is to make the {{log}} precise, compact, and manageable. Instead of duplicating large amounts of (personal) data, prefer storing only the data used in the decision or even just a reference that allows the state at the time of the decision to be recreated.
 
 A logging policy must be implemented to manage what is logged based on risk. When logging sensitive data for high-risk use cases, this should be explicitly documented and approved.
 
