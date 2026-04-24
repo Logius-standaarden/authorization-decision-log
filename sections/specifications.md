@@ -158,7 +158,7 @@ The Authorization Decision Log and the FSC Log have the same granularity and can
 
 ## Sources and referencing {#source-references}
 
-Policy, information and configuration sources MAY be included in the log directly.
+{{Policy}}, information and configuration sources MAY be included in the log directly.
 
 This is generally undesirable however as it introduces duplication, increases the size of the log and increase security requirements for the log by including sensitive data.
 
