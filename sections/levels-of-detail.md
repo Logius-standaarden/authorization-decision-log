@@ -379,7 +379,7 @@ In this example the configuration is stored in the log record itself. To reduce 
 
 ## Implications of levels
 
-The higher the level of detail, the more useful the log is for determining the context of an authorization decision. On the other hand, higher levels of detail also introduce challenges around scalability, technical feasibility, and security.
+The higher the level of detail, the more useful the log is for determining the context of an {{authorization decision}}. On the other hand, higher levels of detail also introduce challenges around scalability, technical feasibility, and security.
 
 Conversely, the lowest level of detail may not be sufficient to provide effective accountability. This depends on the data processing which is being authorized and legal requirements for it.
 
