@@ -37,9 +37,9 @@ A set of one or more rules that determine whether a request should be allowed or
 
 <dfn>Source</dfn>
 
-A source of one or more pieces of information, such as attributes or <a>policies</a>, which affected an <a>authorization decision</a> and which come from a single source.
+A source of one or more pieces of information, such as attributes or <a>policies</a>, which affected an {{authorization decision}} and which come from a single source.
 A source must be identifiable by a single identifier, for example a version, hash or timestamp.
 
 <dfn>Replay</dfn>
 
-The recreation of the environment in which an <a>authorization decision</a> took place, allowing for analysis of historical decisions.
+The recreation of the environment in which an {{authorization decision}} took place, allowing for analysis of historical decisions.
