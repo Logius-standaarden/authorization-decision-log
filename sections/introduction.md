@@ -21,7 +21,7 @@ Authorization is the process of deciding whether to, fully or partially, allow o
 
 <dfn data-lt="eam">Externalized Authorization Management</dfn>
 
-Externalized Authorization Management (EAM) is an architectural pattern in which <a>authorization decisions</a> are made outside of the applications that enforce the decision.
+Externalized Authorization Management (EAM) is an architectural pattern in which {{authorization decisions}} are made outside of the applications that enforce the decision.
 
 <dfn>Log</dfn>
 
