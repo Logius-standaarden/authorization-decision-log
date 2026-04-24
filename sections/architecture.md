@@ -52,7 +52,7 @@ It is important to keep in mind that these are architectural components. They ca
 
 The specification defines an interface for persisting log entries. This is the component that MUST be consistent across organizations to ensure interoperability.
 
-The management of a log, however, is left to the discretion of individual implementations. Consequently, the specification does NOT define behavior or interfaces for:
+The management of a {{log}}, however, is left to the discretion of individual implementations. Consequently, the specification does NOT define behavior or interfaces for:
 
 - deleting or modifying log entries
 - managing access to the log
