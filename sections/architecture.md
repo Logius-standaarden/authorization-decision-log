@@ -1,6 +1,6 @@
 # Architecture
 
-The goal of the standard is to enable the recreation of the environment in which historical authorization decisions were made to enable analysis of decisions while preventing unnecessary data duplication.
+The goal of the standard is to enable the recreation of the environment in which historical {{authorization decisions}} were made to enable analysis of decisions while preventing unnecessary data duplication.
 
 The inputs for records in the Authorization Decision Log come from the following standard <a>EAM</a> or <a>PxP</a> components as introduced in [[[?NIST.SP.800-162]]] and adopt the information model introduced in [[AuthZEN]].
 
@@ -26,7 +26,7 @@ The standard EAM architecture has the following conceptual components. These can
 
 <dfn data-lt="ADL">Authorization Decision Log</dfn>
 
-The Authorization Decision Log contains all information that was used in the authorization decision. Using the Authorization Decision Log it SHOULD be possible to accurately recreate environmental factors that affected historical authorization decisions.
+The Authorization Decision Log contains all information that was used in the {{authorization decision}}. Using the Authorization Decision Log it SHOULD be possible to accurately recreate environmental factors that affected historical {{authorization decisions}}.
 
 <dfn data-lt="PEP">Policy Enforcement Point</dfn>
 
@@ -72,6 +72,6 @@ See <a href="#information-management">Information management</a> for an overview
     <figcaption>Writing a log record after an authorization decision</figcaption>
 </figure>
 
-To provide accountability for historical authorization decisions it must be possible to recreate the information and environment that affected the decision. The <a>PDP</a> provides the information required for this to the <a>Authorization Decision Log</a> in the form of a <a>Log Record</a>.
+To provide accountability for historical {{authorization decisions}} it must be possible to recreate the information and environment that affected the decision. The <a>PDP</a> provides the information required for this to the <a>Authorization Decision Log</a> in the form of a <a>Log Record</a>.
 
 The <a>PDP</a> SHOULD ensure that a <a>Log Record</a> has been persisted to durable storage before providing the <a>PEP</a> with the decision. The PDP then flushes this durable storage to the <a>Authorization Decision Log</a>, ensuring that the log record has been persisted and can be used to provide accountability when needed.
