@@ -95,7 +95,7 @@ For example, a request to the URL defined by the `search_subject_endpoint` in th
 
 The `request` field is an object that represents the input to the decision. This field MUST be in [[AuthZen]] format as defined for the given request type.
 
-Portions of the request MAY be omitted for privacy reasons. If information is omitted, this omission SHOULD be documented or indicated in the log record. If the omitted information was used by the Policy Decision Point, then full accountability can no longer be provided.
+Portions of the request MAY be omitted for privacy reasons. If information is omitted, this omission SHOULD be documented or indicated in the {{log record}}. If the omitted information was used by the Policy Decision Point, then full accountability can no longer be provided.
 
 ### `response`
 
