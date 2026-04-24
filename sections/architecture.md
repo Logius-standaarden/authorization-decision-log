@@ -2,7 +2,7 @@
 
 The goal of the standard is to enable the recreation of the environment in which historical {{authorization decisions}} were made to enable analysis of decisions while preventing unnecessary data duplication.
 
-The inputs for records in the Authorization Decision Log come from the following standard <a>EAM</a> or <a>PxP</a> components as introduced in [[[?NIST.SP.800-162]]] and adopt the information model introduced in [[AuthZEN]].
+The inputs for records in the Authorization Decision Log come from the following standard {{EAM}} or <a>PxP</a> components as introduced in [[[?NIST.SP.800-162]]] and adopt the information model introduced in [[AuthZEN]].
 
 <figure>
     <div class="mermaid" data-figure-name="eam-architecture.mermaid"></div>
@@ -22,7 +22,7 @@ See the sequence diagram below for an example of such a flow.
 
 ## Components
 
-The standard EAM architecture has the following conceptual components. These can be deployed as standalone applications, combined in various configurations, or even implemented within a single monolithic application.
+The standard {{EAM}} architecture has the following conceptual components. These can be deployed as standalone applications, combined in various configurations, or even implemented within a single monolithic application.
 
 <dfn data-lt="ADL">Authorization Decision Log</dfn>
 
