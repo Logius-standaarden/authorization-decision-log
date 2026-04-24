@@ -34,7 +34,7 @@ A Policy Enforcement Point (PEP) intercepts a user's request, sends it to the <a
 
 <dfn data-lt="PAP">Policy Administration Point</dfn>
 
-A Policy Administration Point (PAP) is where access policies are authored, managed, and stored. It is responsible for distributing current policies to the <a>PDP</a> and archiving previous versions for traceability. This can be a dedicated commercial or open-source tool or a version control system like a Git repository.
+A Policy Administration Point (PAP) is where access {{policies}} are authored, managed, and stored. It is responsible for distributing current policies to the <a>PDP</a> and archiving previous versions for traceability. This can be a dedicated commercial or open-source tool or a version control system like a Git repository.
 
 <dfn data-lt="PIP">Policy Information Point</dfn>
 
