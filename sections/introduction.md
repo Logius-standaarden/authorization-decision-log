@@ -1,7 +1,7 @@
 # Introduction
 
 The standard defines additional structure for recording environmental factors that affected the evaluation decision.
-These are separated into active policies, additional information sources and configuration of the evaluation engine as per the architectural components introduced by [[[?NIST.SP.800-162]]], also known as the <dfn>PxP</dfn> architecture.
+These are separated into active {{policies}}, additional information sources and configuration of the evaluation engine as per the architectural components introduced by [[[?NIST.SP.800-162]]], also known as the <dfn>PxP</dfn> architecture.
 
 Additionally, it includes a non-normative outline introducing the concerns, principles and requirements for developing and maintaining such a log in concordance with legislation.
 
