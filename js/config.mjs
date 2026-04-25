@@ -51,8 +51,8 @@ loadRespecWithConfiguration({
 
   localBiblio: {
     "AuthZen": {
-      href: "https://openid.net/specs/authorization-api-1_0-03.html",
-      title: "Authorization API 1.0 – draft 03",
+      href: "https://openid.net/specs/authorization-api-1_0.html",
+      title: "Authorization API 1.0",
       authors: ["O. Gazitt", "D. Brossard", "A. Tulshibagwale"]
     },
     "NIST.SP.800-162": {

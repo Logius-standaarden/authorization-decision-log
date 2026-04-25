@@ -1,10 +1,10 @@
 # Data Verifiability and Level of Detail
 
-The ability to provide accountability depends on the log's level of detail. A balance needs to be struck between capturing enough information to accurately replay historical decisions and practical challenges like data duplication and scalability. The appropriate level of detail depends on the organization's specific context and legal requirements, as the highest level is not always necessary.
+The ability to provide accountability depends on the [=log=]'s level of detail. A balance needs to be struck between capturing enough information to accurately [=replay=] historical decisions and practical challenges like data duplication and scalability. The appropriate level of detail depends on the organization's specific context and legal requirements, as the highest level is not always necessary.
 
-To ensure historical accuracy while minimizing data storage, referencing external information (e.g., via a timestamp or version number) is preferred over storing copies. This approach keeps logs lean but is contingent on the ability of source systems to provide versioned historical data.
+To ensure historical accuracy while minimizing data storage, referencing external information (e.g., via a timestamp or version number) is preferred over storing copies. This approach keeps [=logs=] lean but is contingent on the ability of source systems to provide versioned historical data.
 
-For full replayability, the {{log}} also needs to identify the exact version and configuration of the policy engine that evaluated the decision; however, providing reliable versioning for the engine may not always be feasible, depending on the infrastructure.
+For full [=replayability=], the [=log=] also needs to identify the exact version and configuration of the policy engine that evaluated the decision; however, providing reliable versioning for the engine may not always be feasible, depending on the infrastructure.
 
 ## Definition of Levels
 
@@ -15,10 +15,10 @@ We have identified four levels of detail, in order from least to most detail. Ea
 At the most basic level only the decision request and the decision response are logged.
 
 <p class="note" title="Engine boundaries">
-The decision request and response <i>MAY</i> contain all information required for an audit log, as described by [[?ISO/IEC 27002:2022]] and [[?BIO2]]. If that is the case, and all auditable actions are decided on by the PDP, the Authorization Decision Log <i>MAY</i> be used as an audit log.
+The decision request and response <i>MAY</i> contain all information required for an audit log, as described by [[?ISO/IEC 27002:2022]] and [[?BIO2]]. If that is the case, and all auditable actions are decided on by the <a>PDP</a>, the <a>Authorization Decision Log</a> <i>MAY</i> be used as an audit log.
 </p>
 
-At this level of detail log requests contain all keys that are described as mandatory in [[[#Interface]]].
+At this level of detail [=log records=] contain all keys that are described as mandatory in [[[#Interface]]].
 
 #### Example
 
@@ -138,7 +138,7 @@ In addition to the request and response, one can refer to the exact version of t
 
 #### Example
 
-We can extend the example of the holiday-approval request by adding a reference to a Git repository in which current HR approval policies are documented. In the example below the git hash of the version currently deployed together with the PDP is `6266d07750c44b4c9b05d0801b752c0ef884e4f6`.
+We can extend the example of the holiday-approval request by adding a reference to a Git repository in which current HR approval [=policies=] are documented. In the example below the git hash of the version currently deployed together with the <a>PDP</a> is `6266d07750c44b4c9b05d0801b752c0ef884e4f6`.
 
 <aside class="example" title="Git-versioned policy source">
 
@@ -166,7 +166,7 @@ More complex references can be achieved by using an object as the version identi
 
 </aside>
 
-A log record as expressed as a JSON object for this scenario:
+A [=log record=] as expressed as a JSON object for this scenario:
 
 <aside class="example" title="Log record of denied holiday approval including policies">
 
@@ -217,7 +217,7 @@ A log record as expressed as a JSON object for this scenario:
 
 ### Level 3: All Information Sources
 
-Furthermore, every piece of information used in the evaluation can also be programmatically retrieved, by providing the [`information`](#information) field. This allows full replayability, assuming the engine (PDP) behaves identically or can be manually recreated in the correct state, which is generally achievable.
+Furthermore, every piece of information used in the evaluation can also be programmatically retrieved, by providing the [`information`](#information) field. This allows full [=replayability=], assuming the engine (<a>PDP</a>) behaves identically or can be manually [=reconstructed=] in the correct state, which is generally achievable.
 
 #### Example
 
@@ -245,7 +245,7 @@ And the API returns the following response:
 
 </aside>
 
-A log record as expressed as a JSON object for this scenario:
+A [=log record=] as expressed as a JSON object for this scenario:
 
 <aside class="example" title="Log record of denied holiday approval including policies and information">
 
@@ -300,22 +300,22 @@ A log record as expressed as a JSON object for this scenario:
 </aside>
 
 <p class="note" title="Source references to reduce data duplication">
-In this example the entire response is stored in the log record as it is a small response without sensitive data. In most cases it is recommended to use a reference to the data instead. See [[[#source-references]]] for more information.
+In this example the entire response is stored in the <a>log record</a> as it is a small response without sensitive data. In most cases it is recommended to use a reference to the data instead. See [[[#source-references]]] for more information.
 </p>
 
 ### Level 4: Full Environment
 
-In addition to all information used in the evaluation, the environment and configuration of the system that evaluates the decision can also be accurately recreated through the use of [`configuration`](#configuration) field. This provides full, guaranteed replayability and maximum accountability.
+In addition to all information used in the evaluation, the environment and configuration of the system that evaluates the decision can also be accurately [=reconstructed=] through the use of [`configuration`](#configuration) field. This provides full, guaranteed [=replayability=] and maximum accountability.
 
 <p class="note" title="System boundaries">
-The configuration of all components that influence the decision should be included. While this may be limited to the configuration of the PDP, it often also requires configuration of the PIP and sometimes the PAP as well.
+The configuration of all components that influence the decision should be included. While this may be limited to the configuration of the <a>PDP</a>, it often also requires configuration of the <a>PIP</a> and sometimes the <a>PAP</a> as well.
 </p>
 
-At this level of detail log requests contain the following keys, as defined in [[[#specifications]]]:
+At this level of detail [=log records=] contain the following keys, as defined in [[[#specifications]]]:
 
 #### Example
 
-In the example below we extend the holiday approval request example by describing the version of the language used by the PDP and the configuration of the `can-sign-api` PIP.
+In the example below we extend the holiday approval request example by describing the version of the language used by the <a>PDP</a> and the configuration of the `can-sign-api` <a>PIP</a>.
 
 <aside class="example" title="Log record of denied holiday approval including policies, information and configuration">
 
@@ -374,12 +374,12 @@ In the example below we extend the holiday approval request example by describin
 </aside>
 
 <p class="note" title="Source references to reduce data duplication">
-In this example the configuration is stored in the log record itself. To reduce data duplication it is generally recommended to use a reference to the configuration instead. See [[[#source-references]]] for more information.
+In this example the configuration is stored in the <a>log record</a> itself. To reduce data duplication it is generally recommended to use a reference to the configuration instead. See [[[#source-references]]] for more information.
 </p>
 
 ## Implications of levels
 
-The higher the level of detail, the more useful the log is for determining the context of an {{authorization decision}}. On the other hand, higher levels of detail also introduce challenges around scalability, technical feasibility, and security.
+The higher the level of detail, the more useful the [=log=] is for determining the context of an [=authorization decision=]. On the other hand, higher levels of detail also introduce challenges around scalability, technical feasibility, and security.
 
 Conversely, the lowest level of detail may not be sufficient to provide effective accountability. This depends on the data processing which is being authorized and legal requirements for it.
 
