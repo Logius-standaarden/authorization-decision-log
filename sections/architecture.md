@@ -30,7 +30,7 @@ The Authorization Decision Log contains all information that was used in the {{a
 
 <dfn data-lt="PEP">Policy Enforcement Point</dfn>
 
-A Policy Enforcement Point (PEP) intercepts a user's request, sends it to the <a>PDP</a> for evaluation, and then enforces the resulting "permit" or "deny" decision. A <a>PEP</a> is typically implemented as an API gateway or as a component within the application itself.
+A Policy Enforcement Point (PEP) intercepts a user's request, sends it to the <a>PDP</a> for evaluation, and then enforces the resulting "permit" or "deny" decision. A <a>PEP</a> can be implemented as an API gateway, as application middleware or as a component within the application itself.
 
 <dfn data-lt="PAP">Policy Administration Point</dfn>
 
@@ -72,6 +72,6 @@ See <a href="#information-management">Information management</a> for an overview
     <figcaption>Writing a log record after an authorization decision</figcaption>
 </figure>
 
-To provide accountability for historical {{authorization decisions}} it must be possible to recreate the information and environment that affected the decision. The <a>PDP</a> provides the information required for this to the <a>Authorization Decision Log</a> in the form of a <a>Log Record</a>.
+To provide accountability for historical {{authorization decisions}} it needs to be possible to recreate the information and environment that affected the decision. The <a>PDP</a> provides the information required for this to the <a>Authorization Decision Log</a> in the form of a <a>Log Record</a>.
 
 The <a>PDP</a> SHOULD ensure that a <a>Log Record</a> has been persisted to durable storage before providing the <a>PEP</a> with the decision. The PDP then flushes this durable storage to the <a>Authorization Decision Log</a>, ensuring that the log record has been persisted and can be used to provide accountability when needed.

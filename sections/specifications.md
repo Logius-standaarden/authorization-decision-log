@@ -26,11 +26,17 @@ In the absence of a formally standardized propagation mechanism for a given prot
 
 ## Behavior
 
-{{Authorization decision}} processing MUST participate in distributed tracing as defined by the [[[trace-context]]] specification.
+The log MUST enforce TLS on connections, in accordance with the standard practice established within the organization.
+
+All components participating in evaluation {{authorization decisions}} (including PEPs, PDPs, PAPs, and PIPs):
+
+- MUST participate in distributed tracing as defined by the [[[trace-context]]] specification.
+- MUST preserve trace continuity across component boundaries
+- SHOULD ensure compatibility with OpenTelemetry and similar observability frameworks
 
 ### Trace propagation and initiation
 
-When a [=PEP=]initiates an authorization request to a [=PDP=], the following rules apply:
+When a [=PEP=] initiates an {{authorization decision}} request to a [=PDP=], the following rules apply:
 
 - If the authorization request is part of an existing distributed trace, the [=PEP=] MUST propagate the active [`trace_id`](#trace_id) and parent `span_id` as defined by [[[trace-context]]].
 - If no trace context is present, the [=PEP=] MUST create a new trace and corresponding root span for the authorization request.
@@ -38,23 +44,17 @@ When a [=PEP=]initiates an authorization request to a [=PDP=], the following rul
 
 This ensures that {{authorization decisions}} are consistently correlated with the broader transaction or request lifecycle in which they occur.
 
-### PDP span model and sub-operations
+### PDP span model for sub-requests
 
-TODO: @mtrimpe
+When a [=PDP=] requests additional information from [=PIPs=] or [=PAPs=] during the evaluation of an authorization decision request, the following rules apply:
 
-kern -->
-
-All components participating in authorization decision processing (including PEPs, PDPs, PAPs, and PIPs):
-
-- MUST support distributed tracing context propagation
-- MUST preserve trace continuity across component boundaries
-- SHOULD ensure compatibility with OpenTelemetry and similar observability frameworks
-
-The log MUST enforce TLS on connections, in accordance with the standard practice established within the organization.
+- The [=PDP=] MUST propagate the active [`trace_id`](#trace_id) provided by the [=PEP=] and parent `span_id` as defined by [[[trace-context]]].
+- If the [=PEP=] omitted a trace context, the [=PDP=] MUST create a new trace and corresponding root span for the request for additional information.
+- The [=PDP=] MUST create a new span representing the request for additional information and MUST propagate its context to the [=PIP=] or [=PAP=].
 
 ## Interface {#Interface}
 
-The interface MUST have implement the following fields:
+A log record MUST contain the following mandatory fields and MAY contain the optional fields:
 
 | Field | Type | Mandatory? |
 | --- | --- | --- |
@@ -93,15 +93,15 @@ For example, a request to the URL defined by the `search_subject_endpoint` in th
 
 ### `request`
 
-The `request` field is an object that represents the input to the decision. This field MUST be in [[AuthZen]] format as defined for the given request type.
+The `request` field is an object that represents the input to the decision. This field SHOULD contain the full request in [[AuthZen]] format as defined for the given request type.
 
-Portions of the request MAY be omitted for privacy reasons. If information is omitted, this omission SHOULD be documented or indicated in the {{log record}}. If the omitted information was used by the Policy Decision Point, then full accountability can no longer be provided.
+For privacy reasons portions of the request, including required [[AuthZEN]] fields, MAY be omitted. If information is omitted, this omission MUST be documented or indicated in the {{log record}}. If the omitted information was used by the Policy Decision Point, then full accountability can no longer be provided.
 
 ### `response`
 
-The `response` field is an object that represents the output of the decision. This field MUST be in [[AuthZen]] format as defined for the given request type.
+The `response` field is an object that represents the output of the decision. This field SHOULD contain the full response in [[AuthZen]] format as defined for the given request type.
 
-Portions of the response MAY be omitted for privacy reasons. If information is omitted, this omission SHOULD be documented or indicated in the log record. If information that was used by the Policy Enforcement Point is omitted then full accountability can no longer be provided.
+For privacy reasons portions of the request, including required [[AuthZEN]] fields, MAY be omitted. If information is omitted, this omission MUST be documented or indicated in the {{log record}}. If information that was used by the Policy Enforcement Point is omitted then full accountability can no longer be provided.
 
 ### `policies`
 
