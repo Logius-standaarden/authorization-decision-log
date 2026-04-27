@@ -92,38 +92,41 @@ The <a>PDP</a> then determines that Alice can't sign on behalf of the company an
 
 A <a>log record</a> as expressed as a JSON object for this scenario:
 
-<aside class="example" title="Log record of denied holiday approval">
+<aside class="example" title="LogRecord of denied holiday approval">
 
 ```json
 {
-    "timestamp": "2025-09-07T10:14:18Z",
     "trace_id": "28dbeec32e77635cc19bc3204ec56c41",
     "span_id": "893e1b2ac52d712f",
-    "type": "evaluation",
-    "request": {
-        "subject": {
-            "type": "user",
-            "id": "alice"
-        },
-        "action": {
-            "name": "approve"
-        },
-        "resource": {
-            "type": "holiday-request",
-            "id": "446epbc8y7",
-            "properties": {
-                "employee": "bob"
+    "event_name": "adl.evaluation",
+    "timestamp": "2025-09-07T10:14:18.042Z",
+    "attributes": {},
+    "body": {
+        "request": {
+            "subject": {
+                "type": "user",
+                "id": "alice"
+            },
+            "action": {
+                "name": "approve"
+            },
+            "resource": {
+                "type": "holiday-request",
+                "id": "446epbc8y7",
+                "properties": {
+                    "employee": "bob"
+                }
+            },
+            "context": {
+                "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
             }
         },
-        "context": {
-            "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
-        }
-    },
-    "response": {
-        "decision": false,
-        "context": {
-            "reason": {
-                "48": "No signing authority"
+        "response": {
+            "decision": false,
+            "context": {
+                "reason": {
+                    "48": "No signing authority"
+                }
             }
         }
     }
@@ -134,7 +137,7 @@ A <a>log record</a> as expressed as a JSON object for this scenario:
 
 ### Level 2: Decision and Policies
 
-In addition to the request and response, one can refer to the exact version of the <a>policies</a> that were used to evaluate the request. This can be achieved by incorporating the [`policies`](#policies) field.
+In addition to the request and response, one can refer to the exact version of the <a>policies</a> that were used to evaluate the request. This can be achieved by incorporating the [`adl.policies`](#adl-policies) attribute.
 
 #### Example
 
@@ -168,46 +171,50 @@ More complex references can be achieved by using an object as the version identi
 
 A [=log record=] as expressed as a JSON object for this scenario:
 
-<aside class="example" title="Log record of denied holiday approval including policies">
+<aside class="example" title="LogRecord of denied holiday approval including policies reference">
 
 ```json
 {
-    "timestamp": "2025-09-07T10:14:18Z",
     "trace_id": "28dbeec32e77635cc19bc3204ec56c41",
     "span_id": "893e1b2ac52d712f",
-    "type": "evaluation",
-    "request": {
-        "subject": {
-            "type": "user",
-            "id": "alice"
-        },
-        "action": {
-            "name": "approve"
-        },
-        "resource": {
-            "type": "holiday-request",
-            "id": "446epbc8y7",
-            "properties": {
-                "employee": "bob"
-            }
-        },
-        "context": {
-            "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
-        }
-    },
-    "response": {
-        "decision": false,
-        "context": {
-            "reason": {
-                "48": "No signing authority"
+    "event_name": "adl.evaluation",
+    "timestamp": "2025-09-07T10:14:18.042Z",
+    "attributes": {
+        "adl.policies": {
+            "hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
+            "federation": {
+                "version": "2.7.1",
+                "filter": "maturity_level <= 3"
             }
         }
     },
-    "policies": {
-        "hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
-        "federation": {
-            "version": "2.7.1",
-            "filter": "maturity_level <= 3"
+    "body": {
+        "request": {
+            "subject": {
+                "type": "user",
+                "id": "alice"
+            },
+            "action": {
+                "name": "approve"
+            },
+            "resource": {
+                "type": "holiday-request",
+                "id": "446epbc8y7",
+                "properties": {
+                    "employee": "bob"
+                }
+            },
+            "context": {
+                "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
+            }
+        },
+        "response": {
+            "decision": false,
+            "context": {
+                "reason": {
+                    "48": "No signing authority"
+                }
+            }
         }
     }
 }
@@ -217,7 +224,7 @@ A [=log record=] as expressed as a JSON object for this scenario:
 
 ### Level 3: All Information Sources
 
-Furthermore, every piece of information used in the evaluation can also be programmatically retrieved, by providing the [`information`](#information) field. This allows full [=replayability=], assuming the engine (<a>PDP</a>) behaves identically or can be manually [=reconstructed=] in the correct state, which is generally achievable.
+Furthermore, every piece of information used in the evaluation can also be programmatically retrieved, by providing the [`adl.information`](#adl-information) attribute. This allows full [=replayability=], assuming the engine (<a>PDP</a>) behaves identically or can be manually [=reconstructed=] in the correct state, which is generally achievable.
 
 #### Example
 
@@ -247,51 +254,53 @@ And the API returns the following response:
 
 A [=log record=] as expressed as a JSON object for this scenario:
 
-<aside class="example" title="Log record of denied holiday approval including policies and information">
+<aside class="example" title="LogRecord of denied holiday approval including policies and information references">
 
 ```json
 {
-    "timestamp": "2025-09-07T10:14:18Z",
     "trace_id": "28dbeec32e77635cc19bc3204ec56c41",
     "span_id": "893e1b2ac52d712f",
-    "type": "evaluation",
-    "request": {
-        "subject": {
-            "type": "user",
-            "id": "alice"
-        },
-        "action": {
-            "name": "approve"
-        },
-        "resource": {
-            "type": "holiday-request",
-            "id": "446epbc8y7",
-            "properties": {
-                "employee": "bob"
+    "event_name": "adl.evaluation",
+    "timestamp": "2025-09-07T10:14:18.042Z",
+    "attributes": {
+        "adl.policies": {
+            "hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
+            "federation": {
+                "version": "2.7.1",
+                "filter": "maturity_level <= 3"
             }
         },
-        "context": {
-            "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
+        "adl.information": {
+            "can-sign-api": { "span_id": "836ff5286112f460" }
         }
     },
-    "response": {
-        "decision": false,
-        "context": {
-            "reason": {
-                "48": "No signing authority"
+    "body": {
+        "request": {
+            "subject": {
+                "type": "user",
+                "id": "alice"
+            },
+            "action": {
+                "name": "approve"
+            },
+            "resource": {
+                "type": "holiday-request",
+                "id": "446epbc8y7",
+                "properties": {
+                    "employee": "bob"
+                }
+            },
+            "context": {
+                "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
             }
-        }
-    },
-    "policies": {
-        "hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
-        "federation": {
-            "version": "2.7.1",
-            "filter": "maturity_level <= 3"
-        }
-    },
-    "information": {
-        "can-sign-api": {
-            "can_sign": false
+        },
+        "response": {
+            "decision": false,
+            "context": {
+                "reason": {
+                    "48": "No signing authority"
+                }
+            }
         }
     }
 }
@@ -299,13 +308,13 @@ A [=log record=] as expressed as a JSON object for this scenario:
 
 </aside>
 
-<p class="note" title="Source references to reduce data duplication">
-In this example the entire response is stored in the <a>log record</a> as it is a small response without sensitive data. In most cases it is recommended to use a reference to the data instead. See [[[#source-references]]] for more information.
+<p class="note" title="Sub-span reference for the PIP call">
+The `adl.information` reference for `can-sign-api` is a Sub-span [=source=]: it points to a child [=span=] (`836ff5286112f460`) within the same [=trace=] that represents the [=PIP=] call to the HR API. The actual API request/response can be retrieved through that [=span=] (for example via WARC). See [[[#source-references]]] for the alternative reference patterns.
 </p>
 
 ### Level 4: Full Environment
 
-In addition to all information used in the evaluation, the environment and configuration of the system that evaluates the decision can also be accurately [=reconstructed=] through the use of [`configuration`](#configuration) field. This provides full, guaranteed [=replayability=] and maximum accountability.
+In addition to all information used in the evaluation, the environment and configuration of the system that evaluates the decision can also be accurately [=reconstructed=] through the use of the [`adl.configuration`](#adl-configuration) attribute. This provides full, guaranteed [=replayability=] and maximum accountability.
 
 <p class="note" title="System boundaries">
 The configuration of all components that influence the decision should be included. While this may be limited to the configuration of the <a>PDP</a>, it often also requires configuration of the <a>PIP</a> and sometimes the <a>PAP</a> as well.
@@ -317,64 +326,68 @@ At this level of detail [=log records=] contain the following keys, as defined i
 
 In the example below we extend the holiday approval request example by describing the version of the language used by the <a>PDP</a> and the configuration of the `can-sign-api` <a>PIP</a>.
 
-<aside class="example" title="Log record of denied holiday approval including policies, information and configuration">
+<aside class="example" title="LogRecord of denied holiday approval including configuration in body">
 
 ```json
 {
-    "timestamp": "2025-09-07T10:14:18Z",
     "trace_id": "28dbeec32e77635cc19bc3204ec56c41",
     "span_id": "893e1b2ac52d712f",
-    "type": "evaluation",
-    "request": {
-        "subject": {
-            "type": "user",
-            "id": "alice"
-        },
-        "action": {
-            "name": "approve"
-        },
-        "resource": {
-            "type": "holiday-request",
-            "id": "446epbc8y7",
-            "properties": {
-                "employee": "bob"
+    "event_name": "adl.evaluation",
+    "timestamp": "2025-09-07T10:14:18.042Z",
+    "attributes": {
+        "adl.policies": {
+            "hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
+            "federation": {
+                "version": "2.7.1",
+                "filter": "maturity_level <= 3"
             }
         },
-        "context": {
-            "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
+        "adl.information": {
+            "can-sign-api": { "span_id": "836ff5286112f460" }
         }
     },
-    "response": {
-        "decision": false,
-        "context": {
-            "reason": {
-                "48": "No signing authority"
+    "body": {
+        "request": {
+            "subject": {
+                "type": "user",
+                "id": "alice"
+            },
+            "action": {
+                "name": "approve"
+            },
+            "resource": {
+                "type": "holiday-request",
+                "id": "446epbc8y7",
+                "properties": {
+                    "employee": "bob"
+                }
+            },
+            "context": {
+                "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
             }
+        },
+        "response": {
+            "decision": false,
+            "context": {
+                "reason": {
+                    "48": "No signing authority"
+                }
+            }
+        },
+        "configuration": {
+            "opa": "1.10.0",
+            "can-sign-api": "https://hr.example.com/users/{subject.id}?fields=can_sign"
         }
-    },
-    "policies": {
-        "hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
-        "federation": {
-            "version": "2.7.1",
-            "filter": "maturity_level <= 3"
-        }
-    },
-    "information": {
-        "can-sign-api": {
-            "can_sign": false
-        }
-    },
-    "configuration": {
-        "opa_version": "1.10.0",
-        "can-sign-api": "https://hr.example.com/users/{subject.id}?fields=can_sign"
     }
 }
 ```
 
 </aside>
 
-<p class="note" title="Source references to reduce data duplication">
-In this example the configuration is stored in the <a>log record</a> itself. To reduce data duplication it is generally recommended to use a reference to the configuration instead. See [[[#source-references]]] for more information.
+<p class="note" title="Configuration as raw data in body">
+In this example the `configuration` is raw data — a few key/value pairs describing the OPA version and the can-sign-api endpoint URL — rather than a pointer to a coherent external configuration source. It therefore belongs in <a href="#body"><code>body</code></a> alongside `request` and `response`.
+
+When configuration *is* available from an external source (e.g., a Git-versioned IaaS definition or a configuration management system), the `attributes.adl.configuration` reference pattern (analogous to `adl.policies`) SHOULD be used instead.
 </p>
 
 ## Implications of levels

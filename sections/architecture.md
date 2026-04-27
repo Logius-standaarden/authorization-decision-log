@@ -65,7 +65,20 @@ See <a href="#information-management">Information management</a> for an overview
 
 ## Flows
 
-### Writing a log record after an authorization decision
+### Evaluating an authorization decision
+
+<figure>
+    <div class="mermaid" data-figure-name="decision-evaluation.mermaid"></div>
+    <figcaption>Evaluating an authorization decision</figcaption>
+</figure>
+
+When a <a>PEP</a> needs an [=authorization decision=] it sends an evaluation request to the <a>PDP</a>. The <a>PDP</a> evaluates the request against the [=policies=] received from the <a>PAP</a> and pre-populated information from <a>PIPs</a>, MAY query <a>PIPs</a> for additional dynamic information, and returns the decision.
+
+The <a>PAP</a> distributes [=policies=] and <a>PIPs</a> pre-populate static information into the <a>PDP</a> on their own schedule, independently of any individual [=authorization decision=].
+
+See [Tracing](#tracing) for how this flow maps onto a [=trace=] and its [=spans=].
+
+### Writing a log record
 
 <figure>
     <div class="mermaid" data-figure-name="writing-log-record.mermaid"></div>

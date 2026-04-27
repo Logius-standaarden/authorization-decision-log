@@ -26,31 +26,33 @@ In the absence of a formally standardized propagation mechanism for a given prot
 
 ## Behavior
 
+### TLS
+
 The [=log=] MUST enforce TLS on connections, in accordance with the standard practice established within the organization.
 
-All components participating in evaluation [=authorization decisions=] (including [=PEPs=], [=PDPs=], [=PAPs=], and [=PIPs=]):
+### Tracing
+
+All components participating in the evaluation of [=authorization decisions=] (including [=PEPs=], [=PDPs=], [=PAPs=], and [=PIPs=]):
 
 - MUST participate in distributed tracing as defined by the [[[trace-context]]] specification
 - MUST preserve [=trace=] continuity across component boundaries
 - SHOULD ensure compatibility with OpenTelemetry and similar observability frameworks
 
-### Trace propagation and initiation
+The same rule applies on every request-scoped hop in the evaluation of an [=authorization decision=], whether the sender is a [=PEP=] calling a [=PDP=], a [=PDP=] calling a [=PIP=] or [=PAP=], or any other component:
 
-When a [=PEP=] initiates an [=authorization decision=] request to a [=PDP=], the following rules apply:
+- On receiving an incoming request, the component MUST create a [=span=] as a child of the [=span=] identified by the incoming `traceparent`, or — if no [=trace context=] is present — start a new [=trace=] with a root [=span=].
+- When making an outgoing request, the component MUST emit a `traceparent` carrying the active [`trace_id`](#trace_id) and its own current `span_id` as the `parent-id`, as defined by [[[trace-context]]].
 
-- If the authorization request is part of an existing distributed trace, the [=PEP=] MUST propagate the active [`trace_id`](#trace_id) and parent `span_id` as defined by [[[trace-context]]].
-- If no [=trace context=] is present, the [=PEP=] MUST create a new [=trace=] and corresponding root [=span=] for the authorization request.
-- The [=PEP=] MUST create a [=span=] representing the authorization request and MUST propagate its context to the [=PDP=].
+This ensures that every [=span=] correctly identifies its immediate parent, and that [=authorization decisions=] are consistently correlated with the broader transaction or request lifecycle in which they occur.
 
-This ensures that [=authorization decisions=] are consistently correlated with the broader transaction or request lifecycle in which they occur.
+<figure>
+    <div class="mermaid" data-figure-name="decision-trace.mermaid"></div>
+    <figcaption>Trace and spans during the evaluation of an authorization decision</figcaption>
+</figure>
 
-### PDP span model for sub-requests
-
-When a [=PDP=] requests additional information from [=PIPs=] or [=PAPs=] during the evaluation of an authorization decision request, the following rules apply:
-
-- The [=PDP=] MUST propagate the active [`trace_id`](#trace_id) provided by the [=PEP=] and parent `span_id` as defined by [[[trace-context]]].
-- If the [=PEP=] omitted a [=trace context=], the [=PDP=] MUST create a new [=trace=] and corresponding root [=span=] for the request for additional information.
-- The [=PDP=] MUST create a new [=span=] representing the request for additional information and MUST propagate its context to the [=PIP=] or [=PAP=].
+<p class="note" title="Pro-active interactions are outside the trace">
+Pro-active interactions — for example, a [=PAP=] distributing [=policies=] to a [=PDP=], or a [=PIP=] pre-populating data into a [=PDP=] — happen outside the scope of any individual [=authorization decision=] and are not part of its [=trace=]. They are independent operations with their own lifecycle and, where applicable, their own [=traces=].
+</p>
 
 ## Interface {#Interface}
 
@@ -60,14 +62,10 @@ A [=log record=] MUST contain the following mandatory fields and MAY contain the
 | --- | --- | --- |
 | [`trace_id`](#trace_id) | 16 byte | mandatory |
 | [`span_id`](#span_id) | 8 byte | mandatory |
+| [`event_name`](#event_name) | string | mandatory |
 | [`timestamp`](#timestamp) | timestamp | mandatory |
-| [`type`](#type) | string | mandatory |
-| [`request`](#request) | object | mandatory |
-| [`response`](#response) | object | mandatory |
-| [`policies`](#policies) | object | optional |
-| [`information`](#information) | object | optional |
-| [`configuration`](#configuration) | object | optional |
-| [`transaction_id`](#transaction_id) | string | optional |
+| [`attributes`](#attributes) | object | mandatory |
+| [`body`](#body) | object | optional |
 
 ### `trace_id`
 
@@ -77,37 +75,63 @@ Unique identifier of the [=trace=] that follows data processing.
 
 Unique identifier of the [=span=] within the data processing.
 
+### `event_name`
+
+The `event_name` field identifies the [=log record=] as an ADL accountability record. It MUST be `adl.<endpoint_key>`, where `endpoint_key` is the value of the relevant endpoint as defined in "Endpoint Parameters" of the "Policy Decision Point Metadata" in [[AuthZEN]], with the `_endpoint` suffix omitted.
+
+The `adl.` prefix avoids collisions with other events in the same backend and allows [=log records=] to be filtered or indexed by themselves.
+
+<aside class="example">
+A request to the URL defined by the `search_subject_endpoint` in the [=PDP=] metadata would produce a [=log record=] with `event_name` of `adl.search_subject`.
+</aside>
+
 ### `timestamp`
 
 The `timestamp` field represents the exact point in time when the [=authorization decision=] was made. The timestamp MUST be a `date-time` value as defined in <a data-cite="RFC3339#section-5.6">RFC 3339 § 5.6</a>.
 
-### `type`
+### `attributes`
 
-The `type` field identifies the [[AuthZEN]] endpoint that was invoked. Its value MUST be a string containing the key value of the relevant endpoint as defined in "Endpoint Parameters" of the "Policy Decision Point Metadata" in [[AuthZEN]], with the `_endpoint` suffix omitted.
+The `attributes` object contains [=source=] references and metadata for the [=authorization decision=].
 
-<aside class="example">
-For example, a request to the URL defined by the `search_subject_endpoint` in the [=PDP=] metadata would have the `type` of `search_subject`.
-</aside>
+Each `adl.*` entry in `attributes` MUST be a [=source=] reference (see [[[#source-references]]] for the available reference patterns). Raw payloads MUST NOT be inlined in `attributes`; they belong in [`body`](#body).
 
-### `request`
+The following `adl.*` attributes are defined by this specification:
 
-The `request` field is an object that represents the input to the decision. This field SHOULD contain the full request in [[AuthZEN]] format as defined for the given request type.
+| Attribute | Type | Mandatory? |
+| --- | --- | --- |
+| [`adl.request`](#adl-request) | object | conditional, see below |
+| [`adl.response`](#adl-response) | object | conditional, see below |
+| [`adl.policies`](#adl-policies) | object | conditional, see below |
+| [`adl.information`](#adl-information) | object | conditional, see below |
+| [`adl.configuration`](#adl-configuration) | object | conditional, see below |
+| [`fsc.transaction_id`](#fsc-transaction_id) | string | optional |
 
-For privacy reasons portions of the request, including required [[AuthZEN]] fields, MAY be omitted. If information is omitted, this omission MUST be documented or indicated in the [=log record=]. If the omitted information was used by the [=PDP=], then full accountability can no longer be provided.
+For each `adl.*` field that affected the decision, the data MUST be retrievable from the [=log record=] either:
 
-### `response`
+- as raw data in [`body`](#body), or
+- via a [=source=] reference in `attributes`.
 
-The `response` field is an object that represents the output of the decision. This field SHOULD contain the full response in [[AuthZEN]] format as defined for the given request type.
+A field MAY appear in both (for example, raw data in `body` alongside a Versioned reference in `attributes` for verification).
 
-For privacy reasons portions of the response, including required [[AuthZEN]] fields, MAY be omitted. If information is omitted, this omission MUST be documented or indicated in the [=log record=]. If information that was used by the [=PEP=] is omitted, then full accountability can no longer be provided.
+#### `adl.request` {#adl-request}
 
-### `policies`
+The `adl.request` attribute is a [=source=] reference to the input of the decision when the raw request is not carried in [`body`](#body). The reference MUST resolve to the request in [[AuthZEN]] format.
 
-The `policies` field represents versioned references to the [=policies=] that the [=PDP=] used to evaluate the request. In a [=PxP=] architecture, this represents the information that would come from the [=PAP=].
+For privacy reasons portions of the request, including required [[AuthZEN]] fields, MAY be omitted from both the reference target and `body`. If information is omitted, this omission MUST be documented or indicated in the [=log record=]. If the omitted information was used by the [=PDP=], then full accountability can no longer be provided.
 
-A [=PDP=] can have one or more [=sources=] of [=policies=] which can be individually versioned. To accommodate that the `policies` field is an object in which each key identifies a specific policy [=source=].
+#### `adl.response` {#adl-response}
 
-All policy [=sources=] that affected the decision MUST be included. The value associated with each key refers to a unique version of the policy [=source=]. The information in this field MUST be sufficient to retrieve all [=policies=] from the policy [=sources=] that were used in the [=authorization decision=].
+The `adl.response` attribute is a [=source=] reference to the output of the decision when the raw response is not carried in [`body`](#body). The reference MUST resolve to the response in [[AuthZEN]] format.
+
+For privacy reasons portions of the response, including required [[AuthZEN]] fields, MAY be omitted from both the reference target and `body`. If information is omitted, this omission MUST be documented or indicated in the [=log record=]. If information that was used by the [=PEP=] is omitted, then full accountability can no longer be provided.
+
+#### `adl.policies` {#adl-policies}
+
+The `adl.policies` attribute references the [=policies=] that the [=PDP=] used to evaluate the request. In a [=PxP=] architecture, this represents the information that would come from the [=PAP=].
+
+A [=PDP=] can have one or more [=sources=] of [=policies=] which can be individually versioned. To accommodate that, `adl.policies` is an object in which each key identifies a specific policy [=source=].
+
+All policy [=sources=] that affected the decision MUST be referenced. Each value MUST be a [=source=] reference (see [[[#source-references]]]) sufficient to retrieve the [=policies=] from that [=source=].
 
 <aside class="example">
 A reference value could be:
@@ -119,17 +143,17 @@ A reference value could be:
 
 </aside>
 
-### `information`
+#### `adl.information` {#adl-information}
 
-The `information` field represents all the supporting information used in the evaluation of the access decision. In a [=PxP=] architecture, this field represents the information that would come from [=PIPs=].
+The `adl.information` attribute references the supporting information used in evaluating the access decision. In a [=PxP=] architecture, this represents the information that would come from [=PIPs=].
 
-It is an object in which each key identifies an information [=source=]. All information [=sources=] that affected the decision SHOULD be included. The value of this field SHOULD either contain the information that was used in the access decision or be sufficient to retrieve the information.
+It is an object in which each key identifies an information [=source=]. All information [=sources=] that affected the decision SHOULD be referenced. Each value MUST be a [=source=] reference (see [[[#source-references]]]) sufficient to retrieve the information.
 
-### `configuration`
+#### `adl.configuration` {#adl-configuration}
 
-The `configuration` field represents the information required to [=reconstruct=] the software environment that evaluated the original decision. In a [=PxP=] architecture, this primarily represents the configuration of the [=PDP=], but MAY also include configuration of [=PIPs=] and [=PAPs=].
+The `adl.configuration` attribute references the configuration required to [=reconstruct=] the software environment that evaluated the original decision. In a [=PxP=] architecture, this primarily represents the configuration of the [=PDP=], but MAY also include configuration of [=PIPs=] and [=PAPs=].
 
-It is an object in which each key identifies a configuration [=source=]. All configuration [=sources=] that affected the decision SHOULD be included. The value of this field SHOULD either contain the configuration that was used in the access decision or be sufficient to retrieve the configuration.
+It is an object in which each key identifies a configuration [=source=]. All configuration [=sources=] that affected the decision SHOULD be referenced. Each value MUST be a [=source=] reference (see [[[#source-references]]]) sufficient to retrieve the configuration.
 
 <aside class="example">
 A configuration [=source=] could reference:
@@ -142,7 +166,7 @@ A configuration [=source=] could reference:
 
 </aside>
 
-### `transaction_id`
+#### `fsc.transaction_id` {#fsc-transaction_id}
 
 Unique identifier of the FSC transaction id of this request if the request is also logged as part of [[FSC-Logging]].
 
@@ -152,15 +176,33 @@ The [=Authorization Decision Log=] and the FSC Log have the same granularity and
 
 </div>
 
+### `body`
+
+The `body` field carries the raw `adl.*` payloads. It is an object that MAY contain any of the following keys:
+
+- `request` - full request in [[AuthZEN]] format
+- `response` - full response in [[AuthZEN]] format
+- `policies` - full policies that affected the decision
+- `information` - full information that affected the decision
+- `configuration` - full configuration that affected the decision
+
+A `body` MAY contain a subset of these keys; any field not in `body` MUST be referenced from [`attributes`](#attributes). `body` MAY be omitted entirely when every relevant `adl.*` field is referenced via [`attributes`](#attributes).
+
+## Span attributes
+
+This section describes how a [=log record=] relates to the [=span=] representing the [=PDP=]'s evaluation when the two are emitted using OpenTelemetry. The [=log record=] interface defined in [[[#Interface]]] is an information model and does not require OpenTelemetry; it may be emitted via any transport.
+
+The [=log record=] is correlated with the [=span=] via [`trace_id`](#trace_id) and [`span_id`](#span_id). The [=span=]'s `name` SHOULD equal the AuthZEN endpoint key — the same value used (with `adl.` prefix) in [`event_name`](#event_name) — so [=authorization decisions=] can be identified in tracing tools without joining to the [=log record=].
+
+Implementations MAY additionally mirror selected `adl.*` attributes from the [=log record=] onto the [=span=]'s attributes (for example, the `adl.policies` reference) to enable filtering of decisions in tracing tools. The standard does not require this.
+
 <section class="informative">
 
 ## Sources and referencing {#source-references}
 
-`policies`, `information` and `configuration` [=sources=] MAY be included in the [=log=] directly.
+A [=source=] reference is any compact value from which the referenced data can be retrieved, letting a [=log record=] omit the raw payload from [`body`](#body) without loss of accountability.
 
-This is generally undesirable however as it introduces duplication, increases the size of the [=log=] and increases security requirements for the [=log=] by including sensitive data.
-
-To address this we describe several methods of referencing [=sources=] from the [=log=] below.
+The patterns described below illustrate common reference formats. Implementations are free to use any other format with these properties.
 
 ### Versioned sources
 
@@ -216,55 +258,59 @@ It is RECOMMENDED to use [[[trace-context]]] as the request identifier. The refe
 
 It is RECOMMENDED to log requests in the [[WARC]] format as it includes all request and response headers that may be used in the [=authorization decision=].
 
-The following example shows a [=log record=] for a request to find all subjects capable of approving a holiday request:
+The following example shows a [=log record=] for a request to find all subjects capable of approving a holiday request, where the call to the HR API is recorded in an external WARC log:
 
-<aside class="example" title="Log record of a search request for managers with approval rights">
+<aside class="example" title="LogRecord of a search request for managers with approval rights">
 
 ```json
 {
-    "timestamp": "2025-09-07T10:15:36Z",
     "trace_id": "28dbeec32e77635cc19bc3204ec56c41",
     "span_id": "17c59821784ee492",
-    "type": "search_subject",
-    "request": {
-        "subject": {
-            "type": "user"
+    "event_name": "adl.search_subject",
+    "timestamp": "2025-09-07T10:15:36.089Z",
+    "attributes": {
+        "adl.policies": {
+            "git": "e4c15a063048367da367d5588d703b5e4a6b760e"
         },
-        "action": {
-            "name": "approve"
-        },
-        "resource": {
-            "type": "holiday-request",
-            "id": "446epbc8y7",
-            "properties": {
-                "employee": "bob"
-            }
+        "adl.information": {
+            "managers-api": { "span_id": "45deb36022f53afa" }
         }
     },
-    "response": {
-        "results": [
-            {
-                "type": "user",
-                "id": "carol"
+    "body": {
+        "request": {
+            "subject": {
+                "type": "user"
             },
-            {
-                "type": "user",
-                "id": "dan"
+            "action": {
+                "name": "approve"
+            },
+            "resource": {
+                "type": "holiday-request",
+                "id": "446epbc8y7",
+                "properties": {
+                    "employee": "bob"
+                }
             }
-        ]
-    },
-    "policies": {
-        "git": "e4c15a063048367da367d5588d703b5e4a6b760e"
-    },
-    "information": {
-        "managers-api": "45deb36022f53afa"
+        },
+        "response": {
+            "results": [
+                {
+                    "type": "user",
+                    "id": "carol"
+                },
+                {
+                    "type": "user",
+                    "id": "dan"
+                }
+            ]
+        }
     }
 }
 ```
 
 </aside>
 
-Which would result in the following WARC entries logging the REST API call to the HR system:
+The `adl.information` reference points to a [=span=] (`45deb36022f53afa`) within the same [=trace=]. That [=span=] represents the HR API call. The HTTP exchange of that call is logged as WARC entries indexed by the same `trace_id` and `span_id`:
 
 <aside class="example" title="WARC entries for REST API call to HR system">
 
@@ -306,5 +352,25 @@ Content-Length: 107
 ```
 
 </aside>
+
+### Sub-span sources
+
+When the [=PDP=] makes calls to [=PIPs=] or [=PAPs=] during evaluation, those calls are modelled as child [=spans=] within the same [=trace=] (see [Tracing](#tracing)). An `adl.information` or `adl.policies` [=source=] MAY reference such a child [=span=] using only its `span_id`; the `trace_id` is implicit because the child [=span=] is part of the same [=trace=] as the [=log record=].
+
+<aside class="example" title="Sub-span source reference">
+
+```json
+{
+    "can-sign-api": { "span_id": "836ff5286112f460" }
+}
+```
+
+</aside>
+
+A Sub-span [=source=] reference points to a [=span=]. This standard does not prescribe what data is associated with that [=span=]; implementations MAY persist additional context (for example via OpenTelemetry log records) using their own conventions.
+
+<p class="note">
+Implementations using Sub-span [=source=] references SHOULD ensure the referenced [=spans=] remain available for at least the same retention period as the parent [=log record=]. If the referenced [=span=] is no longer available, the corresponding [=source=] data cannot be retrieved.
+</p>
 
 </section>
