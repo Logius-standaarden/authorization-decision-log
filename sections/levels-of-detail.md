@@ -15,7 +15,7 @@ We have identified four levels of detail, in order from least to most detail. Ea
 At the most basic level only the decision request and the decision response are logged.
 
 <p class="note" title="Engine boundaries">
-The decision request and response <i>MAY</i> contain all information required for an audit log, as described by [[?ISO/IEC 27002:2022]] and [[?BIO2]]. If that is the case, and all auditable actions are decided on by the <a>PDP</a>, the <a>Authorization Decision Log</a> <i>MAY</i> be used as an audit log.
+The decision request and response MAY contain all information required for an audit log, as described by [[?ISO/IEC 27002:2022]] and [[?BIO2]]. Where that is the case, and all auditable actions are decided on by the [=PDP=], the [=Authorization Decision Log=] MAY be combined with logs of other auditable events and used as an audit log.
 </p>
 
 At this level of detail [=log records=] contain all keys that are described as mandatory in [[[#Interface]]].
@@ -92,17 +92,19 @@ The <a>PDP</a> then determines that Alice can't sign on behalf of the company an
 
 A <a>log record</a> as expressed as a JSON object for this scenario:
 
-<aside class="example" title="LogRecord of denied holiday approval">
+<aside class="example" title="Log record of denied holiday approval">
 
 ```json
 {
     "trace_id": "28dbeec32e77635cc19bc3204ec56c41",
-    "span_id": "893e1b2ac52d712f",
-    "event_name": "adl.evaluation",
-    "timestamp": "2025-09-07T10:14:18.042Z",
+    "span_id": "5e3c8a4f9b2d1e07",
+    "parent_span_id": "893e1b2ac52d712f",
+    "event_name": "adl.access_evaluation",
+    "timestamp": 1757240058042,
+    "status": "Unset",
     "attributes": {},
     "body": {
-        "request": {
+        "adl.core.request": {
             "subject": {
                 "type": "user",
                 "id": "alice"
@@ -121,7 +123,7 @@ A <a>log record</a> as expressed as a JSON object for this scenario:
                 "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
             }
         },
-        "response": {
+        "adl.core.response": {
             "decision": false,
             "context": {
                 "reason": {
@@ -137,7 +139,7 @@ A <a>log record</a> as expressed as a JSON object for this scenario:
 
 ### Level 2: Decision and Policies
 
-In addition to the request and response, one can refer to the exact version of the <a>policies</a> that were used to evaluate the request. This can be achieved by incorporating the [`adl.policies`](#adl-policies) attribute.
+In addition to the request and response, one can refer to the exact version of the <a>policies</a> that were used to evaluate the request. This can be achieved by incorporating the [`adl.core.policies`](#adl-core-policies) attribute.
 
 #### Example
 
@@ -171,16 +173,18 @@ More complex references can be achieved by using an object as the version identi
 
 A [=log record=] as expressed as a JSON object for this scenario:
 
-<aside class="example" title="LogRecord of denied holiday approval including policies reference">
+<aside class="example" title="Log record of denied holiday approval including policies reference">
 
 ```json
 {
     "trace_id": "28dbeec32e77635cc19bc3204ec56c41",
-    "span_id": "893e1b2ac52d712f",
-    "event_name": "adl.evaluation",
-    "timestamp": "2025-09-07T10:14:18.042Z",
+    "span_id": "5e3c8a4f9b2d1e07",
+    "parent_span_id": "893e1b2ac52d712f",
+    "event_name": "adl.access_evaluation",
+    "timestamp": 1757240058042,
+    "status": "Unset",
     "attributes": {
-        "adl.policies": {
+        "adl.core.policies": {
             "hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
             "federation": {
                 "version": "2.7.1",
@@ -189,7 +193,7 @@ A [=log record=] as expressed as a JSON object for this scenario:
         }
     },
     "body": {
-        "request": {
+        "adl.core.request": {
             "subject": {
                 "type": "user",
                 "id": "alice"
@@ -208,7 +212,7 @@ A [=log record=] as expressed as a JSON object for this scenario:
                 "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
             }
         },
-        "response": {
+        "adl.core.response": {
             "decision": false,
             "context": {
                 "reason": {
@@ -224,7 +228,7 @@ A [=log record=] as expressed as a JSON object for this scenario:
 
 ### Level 3: All Information Sources
 
-Furthermore, every piece of information used in the evaluation can also be programmatically retrieved, by providing the [`adl.information`](#adl-information) attribute. This allows full [=replayability=], assuming the engine (<a>PDP</a>) behaves identically or can be manually [=reconstructed=] in the correct state, which is generally achievable.
+Furthermore, every piece of information used in the evaluation can also be programmatically retrieved, by providing the [`adl.core.information`](#adl-core-information) attribute. This allows full [=replayability=], assuming the engine (<a>PDP</a>) behaves identically or can be manually [=reconstructed=] in the correct state, which is generally achievable.
 
 #### Example
 
@@ -254,28 +258,30 @@ And the API returns the following response:
 
 A [=log record=] as expressed as a JSON object for this scenario:
 
-<aside class="example" title="LogRecord of denied holiday approval including policies and information references">
+<aside class="example" title="Log record of denied holiday approval including policies and information references">
 
 ```json
 {
     "trace_id": "28dbeec32e77635cc19bc3204ec56c41",
-    "span_id": "893e1b2ac52d712f",
-    "event_name": "adl.evaluation",
-    "timestamp": "2025-09-07T10:14:18.042Z",
+    "span_id": "5e3c8a4f9b2d1e07",
+    "parent_span_id": "893e1b2ac52d712f",
+    "event_name": "adl.access_evaluation",
+    "timestamp": 1757240058042,
+    "status": "Unset",
     "attributes": {
-        "adl.policies": {
+        "adl.core.policies": {
             "hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
             "federation": {
                 "version": "2.7.1",
                 "filter": "maturity_level <= 3"
             }
         },
-        "adl.information": {
+        "adl.core.information": {
             "can-sign-api": { "span_id": "836ff5286112f460" }
         }
     },
     "body": {
-        "request": {
+        "adl.core.request": {
             "subject": {
                 "type": "user",
                 "id": "alice"
@@ -294,7 +300,7 @@ A [=log record=] as expressed as a JSON object for this scenario:
                 "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
             }
         },
-        "response": {
+        "adl.core.response": {
             "decision": false,
             "context": {
                 "reason": {
@@ -308,13 +314,13 @@ A [=log record=] as expressed as a JSON object for this scenario:
 
 </aside>
 
-<p class="note" title="Sub-span reference for the PIP call">
-The `adl.information` reference for `can-sign-api` is a Sub-span [=source=]: it points to a child [=span=] (`836ff5286112f460`) within the same [=trace=] that represents the [=PIP=] call to the HR API. The actual API request/response can be retrieved through that [=span=] (for example via WARC). See [[[#source-references]]] for the alternative reference patterns.
+<p class="note" title="Logged source for the PIP call">
+The `adl.core.information` reference for `can-sign-api` is a Logged [=source=]: it points to a [=span=] (`836ff5286112f460`) within the same [=trace=] that represents the [=PIP=] call to the HR API. The actual API request/response is retrieved from an external [=log=] (for example a WARC archive) keyed by `trace_id` and `span_id`. See [[[#source-references]]] for the alternative reference patterns.
 </p>
 
 ### Level 4: Full Environment
 
-In addition to all information used in the evaluation, the environment and configuration of the system that evaluates the decision can also be accurately [=reconstructed=] through the use of the [`adl.configuration`](#adl-configuration) attribute. This provides full, guaranteed [=replayability=] and maximum accountability.
+In addition to all information used in the evaluation, the environment and configuration of the system that evaluates the decision can also be accurately [=reconstructed=] through the use of the [`adl.core.configuration`](#adl-core-configuration) attribute. This provides full, guaranteed [=replayability=] and maximum accountability.
 
 <p class="note" title="System boundaries">
 The configuration of all components that influence the decision should be included. While this may be limited to the configuration of the <a>PDP</a>, it often also requires configuration of the <a>PIP</a> and sometimes the <a>PAP</a> as well.
@@ -326,28 +332,30 @@ At this level of detail [=log records=] contain the following keys, as defined i
 
 In the example below we extend the holiday approval request example by describing the version of the language used by the <a>PDP</a> and the configuration of the `can-sign-api` <a>PIP</a>.
 
-<aside class="example" title="LogRecord of denied holiday approval including configuration in body">
+<aside class="example" title="Log record of denied holiday approval including configuration in body">
 
 ```json
 {
     "trace_id": "28dbeec32e77635cc19bc3204ec56c41",
-    "span_id": "893e1b2ac52d712f",
-    "event_name": "adl.evaluation",
-    "timestamp": "2025-09-07T10:14:18.042Z",
+    "span_id": "5e3c8a4f9b2d1e07",
+    "parent_span_id": "893e1b2ac52d712f",
+    "event_name": "adl.access_evaluation",
+    "timestamp": 1757240058042,
+    "status": "Unset",
     "attributes": {
-        "adl.policies": {
+        "adl.core.policies": {
             "hr": "6266d07750c44b4c9b05d0801b752c0ef884e4f6",
             "federation": {
                 "version": "2.7.1",
                 "filter": "maturity_level <= 3"
             }
         },
-        "adl.information": {
+        "adl.core.information": {
             "can-sign-api": { "span_id": "836ff5286112f460" }
         }
     },
     "body": {
-        "request": {
+        "adl.core.request": {
             "subject": {
                 "type": "user",
                 "id": "alice"
@@ -366,7 +374,7 @@ In the example below we extend the holiday approval request example by describin
                 "traceparent": "00-28dbeec32e77635cc19bc3204ec56c41-dec5220770f8f4f4-01"
             }
         },
-        "response": {
+        "adl.core.response": {
             "decision": false,
             "context": {
                 "reason": {
@@ -374,7 +382,7 @@ In the example below we extend the holiday approval request example by describin
                 }
             }
         },
-        "configuration": {
+        "adl.core.configuration": {
             "opa": "1.10.0",
             "can-sign-api": "https://hr.example.com/users/{subject.id}?fields=can_sign"
         }
@@ -385,9 +393,8 @@ In the example below we extend the holiday approval request example by describin
 </aside>
 
 <p class="note" title="Configuration as raw data in body">
-In this example the `configuration` is raw data — a few key/value pairs describing the OPA version and the can-sign-api endpoint URL — rather than a pointer to a coherent external configuration source. It therefore belongs in <a href="#body"><code>body</code></a> alongside `request` and `response`.
-
-When configuration *is* available from an external source (e.g., a Git-versioned IaaS definition or a configuration management system), the `attributes.adl.configuration` reference pattern (analogous to `adl.policies`) SHOULD be used instead.
+In this example the `configuration` is raw data — a few key/value pairs describing the OPA version and the can-sign-api endpoint URL — rather than a pointer to a coherent external configuration source. It therefore belongs in <a href="#body"><code>body</code></a> alongside `request` and `response`. <br/><br/>
+When configuration *is* available from an external source (e.g., a Git-versioned IaaS definition or a configuration management system), the `attributes.adl.core.configuration` reference pattern (analogous to `adl.core.policies`) SHOULD be used instead.
 </p>
 
 ## Implications of levels

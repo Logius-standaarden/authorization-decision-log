@@ -1,7 +1,6 @@
 # Introduction
 
-The standard defines additional structure for recording environmental factors that affected the evaluation decision.
-These are separated into active [=policies=], additional information sources and configuration of the evaluation engine as per the architectural components introduced by [[[?NIST.SP.800-162]]], also known as the <dfn>PxP</dfn> architecture.
+This standard defines a structure for logging [=authorization decisions=] together with the context that produced them: the request, the response, the active [=policies=], the information sources consulted, and the configuration of the evaluation engine. These categories correspond to the components of the [[[?NIST.SP.800-162]]] architecture, also known as the <dfn>PxP</dfn> architecture.
 
 Additionally, it includes a non-normative outline introducing the concerns, principles and requirements for developing and maintaining such a [=log=] in concordance with legislation.
 
@@ -23,7 +22,7 @@ This is materially different from the noun "authorization" which typically refer
 
 <dfn data-lt="authorization decisions">Authorization decision</dfn>
 
-The outcome of a single [[AuthZEN]] call to a [=PDP=]: a permit or deny decision for one or more requested permissions, or a (partial) enumeration of permitted subjects, actions, or resources. Authorization decisions are the units recorded in an [=Authorization Decision Log=].
+A decision produced in the [=authorization=] process, determining whether a particular request is allowed or denied, fully or partially. Authorization decisions are the units recorded in an [=Authorization Decision Log=].
 
 <dfn data-lt="eam">Externalized Authorization Management</dfn>
 

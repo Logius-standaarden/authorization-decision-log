@@ -41,8 +41,8 @@ loadRespecWithConfiguration({
       },
       {
         name: "Michiel Trimpe",
-        company: "VNG Realisatie",
-        companyURL: "https://vng.nl/artikelen/vng-realisatie"
+        company: "Mondiality",
+        companyURL: "https://mondiality.com"
       }
     ],
   github: "https://github.com/Logius-standaarden/authorization-decision-log",
@@ -87,6 +87,21 @@ loadRespecWithConfiguration({
       href: "https://zoek.officielebekendmakingen.nl/stcrt-2026-7416-n1.html",
       title: "Circulaire Baseline Informatiebeveiliging Overheid 2",
       date: "5 maart 2026"
+    },
+    "OpenTelemetry": {
+      href: "https://opentelemetry.io/docs/specs/otel/",
+      title: "OpenTelemetry Specification",
+      publisher: "Cloud Native Computing Foundation"
+    },
+    "OTLP": {
+      href: "https://opentelemetry.io/docs/specs/otlp/",
+      title: "OpenTelemetry Protocol (OTLP) Specification",
+      publisher: "Cloud Native Computing Foundation"
+    },
+    "LDV": {
+      href: "https://logius-standaarden.github.io/logboek-dataverwerkingen/",
+      title: "Logboek Dataverwerkingen",
+      publisher: "Logius"
     }
   },
 });

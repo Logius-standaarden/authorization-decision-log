@@ -1,10 +1,10 @@
 sequenceDiagram
     participant PEP
     participant PDP
-    participant Queue as Durable<br/>Queue
+    participant Storage as Durable<br/>Storage
     participant ADL as Decision<br/>Log
     PEP->>+PDP: Access Evaluation Request
     PDP->>PDP: Decide
-    PDP->>Queue: Idempotent write<br/>of Log Record
+    PDP->>Storage: Idempotent write<br/>of Log Record
     PDP->>-PEP: Decision
-    Queue-)ADL: Flush to log
+    Storage-)ADL: Flush to log

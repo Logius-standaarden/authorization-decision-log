@@ -11,7 +11,7 @@ The inputs for records in the <a>Authorization Decision Log</a> come from the fo
 
 In a federated context, such as introduced by [[FSC-Core]], both the consumer outway and provider inway function as a <a>PEP</a> for incoming and outgoing requests. Both the consumer and the provider ask an internal <a>PDP</a> to decide on allowing the request. Both of these decisions can be logged using this standard.
 
-When combined with tracing headers such as [[trace-context]] introduced by [[logboek dataverwerkingen]] and the FSC Transaction ID used in [[FSC-Logging]], this enables full traceability across complex multi-organizational processing chains.
+When combined with tracing headers per [[trace-context]] (also adopted by [[LDV]]) and the FSC Transaction ID used in [[FSC-Logging]], this enables full traceability across complex multi-organizational processing chains.
 
 See the sequence diagram below for an example of such a flow.
 
@@ -45,12 +45,14 @@ A Policy Information Point (PIP) enriches access requests with additional attrib
 A Policy Decision Point (PDP) evaluates incoming requests from the <a>PEP</a> against the relevant [=policies=] (from the <a>PAP</a>) and contextual data (from the <a>PIP</a>) to make a "permit" or "deny" decision. The <a>PDP</a> is often a separate application or sidecar container.
 
 <p class="note" title="EAM components within a monolithic application">
-It is important to keep in mind that these are architectural components. They can also be physically implemented in a single application. In such a case the authorization interceptor can be considered the <a>PEP</a>; the authorization handler, the <a>PDP</a>; the services it invokes, the <a>PIP</a>; and the Git repository of the application itself, the <a>PAP</a>.
+These are architectural roles, not deployment boundaries. A single application can fulfil all four: the authorization interceptor as the <a>PEP</a>, the authorization handler as the <a>PDP</a>, the services it invokes as <a>PIPs</a>, and the application's own Git repository as the <a>PAP</a>.
 </p>
 
 ## Scope
 
 The specification defines an interface for persisting [=log records=]. This is the component that MUST be consistent across organizations to ensure interoperability.
+
+Any [=authorization decision=] representable in the [[AuthZEN]] information model is in scope of this standard, regardless of the wire protocol by which the decision is delivered.
 
 The management of a [=log=], however, is left to the discretion of individual implementations. Consequently, the specification does NOT define behavior or interfaces for:
 
@@ -59,7 +61,7 @@ The management of a [=log=], however, is left to the discretion of individual im
 - ensuring long-term accessibility
 - handling archival and retention periods
 - ensuring integrity and non-repudiation
-- maintaining time-synchronization
+- maintaining time synchronisation
 
 See <a href="#information-management">Information management</a> for an overview of various aspects which MAY be required for legal and regulatory compliance.
 
@@ -85,6 +87,14 @@ See [Tracing](#tracing) for how this flow maps onto a [=trace=] and its [=spans=
     <figcaption>Writing a log record after an authorization decision</figcaption>
 </figure>
 
-To provide accountability for historical [=authorization decisions=] it needs to be possible to [=reconstruct=] the information and environment that affected the decision. The <a>PDP</a> provides the information required for this to the <a>Authorization Decision Log</a> in the form of a <a>Log Record</a>.
+To provide accountability for historical [=authorization decisions=] it needs to be possible to [=reconstruct=] the information and environment that affected the decision. The <a>PDP</a> provides the information required for this to the <a>Authorization Decision Log</a> in the form of a <a>log record</a>.
 
-The <a>PDP</a> SHOULD ensure that a <a>Log Record</a> has been persisted to durable storage before providing the <a>PEP</a> with the decision. The <a>PDP</a> then flushes this durable storage to the <a>Authorization Decision Log</a>, ensuring that the <a>log record</a> has been persisted and can be used to provide accountability when needed.
+The <a>PDP</a> SHOULD ensure that a <a>log record</a> has been persisted to durable storage before providing the <a>PEP</a> with the decision. Once the <a>log record</a> has reached durable storage, an asynchronous flush to the <a>Authorization Decision Log</a> completes ingestion. The component responsible for this flush is implementation-defined and MAY be the <a>PDP</a>, a sidecar (such as the OpenTelemetry Collector or Fluent Bit), or a host-level log collector.
+
+<p class="note" title="Definition of durable storage">
+"Durable storage" is intentionally not defined by this specification. Organisations MUST define a working definition in their logging policy, taking into account their risk appetite and operational constraints. Common interpretations range from a local <code>fsync</code>'d write to a replicated commit on a queue with quorum. See <a href="#information-management">Information management</a> for related considerations.
+</p>
+
+<p class="note" title="Common pattern: write-ahead log with asynchronous flush">
+A widely deployed pattern is to write the <a>log record</a> to a local write-ahead log (durable storage) before the <a>PDP</a> returns the decision, then asynchronously flush from the write-ahead log to the <a>Authorization Decision Log</a> with idempotent ingestion. This pattern bounds the synchronous-path latency while preserving the durability guarantee.
+</p>
