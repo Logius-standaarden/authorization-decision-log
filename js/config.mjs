@@ -18,12 +18,12 @@ loadRespecWithConfiguration({
     [
       {
         company: "Logius",
-        companyURL: "https://logius.nl",
+        companyURL: "https://www.logius.nl",
         name: "Nil Barua"
       },
       {
         company : "Logius",
-        companyURL : "https://logius.nl",
+        companyURL : "https://www.logius.nl",
         name : "Stas Mironov"
       }
     ],
