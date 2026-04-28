@@ -21,3 +21,8 @@ Neem voor meer informatie contact op met:
 Marc de Boer
 [marc.deboer@ictu.nl](mailto:marc.deboer@ictu.nl)
 06-14460350
+
+Neem voor informatie over beheer van de standaard contact op met:
+
+Logius Standaarden
+[api@logius.nl](mailto:api@logius.nl)
