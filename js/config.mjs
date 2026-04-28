@@ -9,8 +9,8 @@ loadRespecWithConfiguration({
   specType: "ST",
   pubDomain: "ftv",
   shortName: "adl",
-  publishDate: "2024-05-19",
-  publishVersion: "0.0.1",
+  publishDate: "2026-04-29",
+  publishVersion: "1.0.0",
   // TODO: verwijder voor publicatie
   prevVersion: [],
   latestVersion: "https://logius-standaarden.github.io/authorization-decision-log/",
