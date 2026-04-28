@@ -7,6 +7,8 @@ loadRespecWithConfiguration({
   license: "cc-by",
   specStatus: "WV",
   specType: "ST",
+  previousPublishVersion: "0.0.1",
+  previousPublishDate: "2024-05-19",
   pubDomain: "ftv",
   shortName: "adl",
   publishDate: "2026-04-29",
