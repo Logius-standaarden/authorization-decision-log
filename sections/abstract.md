@@ -1,1 +1,1 @@
-This document defines a standardized method for logging decisions to allow or deny API requests to enable reconstruction and analysis of historical decisions.
+This document defines a method for logging authorization decisions to allow or deny API requests, providing accountability within and across organisations. The standard adopts [[trace-context]] for tracing across organisation boundaries and defines an OpenTelemetry-shaped log record based on the [[AuthZEN]] information model, supporting [=reconstruction=], analysis and [=replay=] of historical decisions.

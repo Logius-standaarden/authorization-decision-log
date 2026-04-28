@@ -41,8 +41,8 @@ loadRespecWithConfiguration({
       },
       {
         name: "Michiel Trimpe",
-        company: "VNG Realisatie",
-        companyURL: "https://vng.nl/artikelen/vng-realisatie"
+        company: "Mondiality",
+        companyURL: "https://mondiality.com"
       }
     ],
   github: "https://github.com/Logius-standaarden/authorization-decision-log",
@@ -50,13 +50,25 @@ loadRespecWithConfiguration({
   postProcess: [generateMermaidFigures],
 
   localBiblio: {
-    "AuthZen": {
-      href: "https://openid.net/specs/authorization-api-1_0-03.html",
-      title: "Authorization API 1.0 – draft 03",
+    "AuthZEN": {
+      href: "https://openid.net/specs/authorization-api-1_0.html",
+      title: "Authorization API 1.0",
       authors: ["O. Gazitt", "D. Brossard", "A. Tulshibagwale"]
     },
+    "RFC9112": {
+      href: "https://www.rfc-editor.org/rfc/rfc9112.html",
+      title: "HTTP/1.1",
+      authors: ["R. Fielding", "M. Nottingham", "J. Reschke"],
+      date: "June 2022"
+    },
+    "RFC9113": {
+      href: "https://www.rfc-editor.org/rfc/rfc9113.html",
+      title: "HTTP/2",
+      authors: ["M. Thomson", "C. Benfield"],
+      date: "June 2022"
+    },
     "NIST.SP.800-162": {
-      href: "https://www.nist.gov/publications/guide-attribute-based-access-control-abac-definition-and-considerations-1",
+      href: "https://doi.org/10.6028/NIST.SP.800-162",
       title: "Guide to Attribute Based Access Control (ABAC) Definition and Considerations",
       authors: ["Chung Tong Hu", "David F. Ferraiolo", "David R. Kuhn"],
       date: "February 25, 2019"
@@ -72,9 +84,24 @@ loadRespecWithConfiguration({
       date: "2022-02"
     },
     "BIO2": {
-      href: "https://www.bio-overheid.nl/media/cs5ctudu/20250924-baseline-informatiebeveiliging-overheid-2-bio2-v12-def.pdf",
-      title: "Baseline Informatiebeveiliging Overheid 2",
-      date: "24 september 2025"
+      href: "https://zoek.officielebekendmakingen.nl/stcrt-2026-7416-n1.html",
+      title: "Circulaire Baseline Informatiebeveiliging Overheid 2",
+      date: "5 maart 2026"
+    },
+    "OpenTelemetry": {
+      href: "https://opentelemetry.io/docs/specs/otel/",
+      title: "OpenTelemetry Specification",
+      publisher: "Cloud Native Computing Foundation"
+    },
+    "OTLP": {
+      href: "https://opentelemetry.io/docs/specs/otlp/",
+      title: "OpenTelemetry Protocol (OTLP) Specification",
+      publisher: "Cloud Native Computing Foundation"
+    },
+    "LDV": {
+      href: "https://logius-standaarden.github.io/logboek-dataverwerkingen/",
+      title: "Logboek Dataverwerkingen",
+      publisher: "Logius"
     }
   },
 });
