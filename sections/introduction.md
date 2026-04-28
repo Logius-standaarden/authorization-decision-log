@@ -1,6 +1,6 @@
 # Introduction
 
-This standard defines a structure for logging [=authorization decisions=] together with the context that produced them: the request, the response, the active [=policies=], the information sources consulted, and the configuration of the evaluation engine. These categories correspond to the components of the [[[?NIST.SP.800-162]]] architecture, also known as the <dfn>PxP</dfn> architecture.
+This standard defines a structure for logging [=authorization decisions=] together with the context that produced them: the tracing context, the request, the response, the active [=policies=], the information sources consulted, and the configuration of the evaluation engine. These categories correspond to the components of the [[[?NIST.SP.800-162]]] architecture, also known as the <dfn>PxP</dfn> architecture.
 
 Additionally, it includes a non-normative outline introducing the concerns, principles and requirements for developing and maintaining such a [=log=] in concordance with legislation.
 
@@ -9,6 +9,8 @@ Additionally, it includes a non-normative outline introducing the concerns, prin
 This standard defines a uniform approach for logging [=authorization decisions=], enabling organizations to provide effective accountability for historical decisions.
 
 The standard provides a structured format for all contextual and environmental parameters that affect decisions. A full implementation of the standard allows historical decisions to be [=replayed=] for analysis.
+
+It also defines participation in a distributed [[trace-context]] and binds [=log records=] to it, allowing correlation of related logs, such as [[LDV]] and [[FSC-Logging]], in complex inter-organisational data processing chains.
 
 ## Terminology
 
