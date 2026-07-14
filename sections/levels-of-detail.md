@@ -1,8 +1,8 @@
 # Data Verifiability and Level of Detail
 
-The ability to provide accountability depends on the [=log=]'s level of detail. A balance needs to be struck between capturing enough information to accurately [=replay=] historical decisions and practical challenges like data duplication and scalability. The appropriate level of detail depends on the organization's specific context and legal requirements, as the highest level is not always necessary.
+The ability to provide accountability depends on the [=log=]'s level of detail. A balance needs to be struck between capturing enough information to accurately [=replay=] historical decisions and practical challenges like data duplication and scalability. The appropriate level of detail depends on the organisation's specific context and legal requirements, as the highest level is not always necessary.
 
-To ensure historical accuracy while minimizing data storage, referencing external information (e.g., via a timestamp or version number) is preferred over storing copies. This approach keeps [=logs=] lean but is contingent on the ability of source systems to provide versioned historical data.
+To ensure historical accuracy while minimising data storage, referencing external information (e.g., via a timestamp or version number) is preferred over storing copies. This approach keeps [=logs=] lean but is contingent on the ability of source systems to provide versioned historical data.
 
 For full [=replayability=], the [=log=] also needs to identify the exact version and configuration of the policy engine that evaluated the decision; however, providing reliable versioning for the engine may not always be feasible, depending on the infrastructure.
 
@@ -401,6 +401,6 @@ When configuration *is* available from an external source (e.g., a Git-versioned
 
 The higher the level of detail, the more useful the [=log=] is for determining the context of an [=authorization decision=]. On the other hand, higher levels of detail also introduce challenges around scalability, technical feasibility, and security.
 
-Conversely, the lowest level of detail may not be sufficient to provide effective accountability. This depends on the data processing which is being authorized and legal requirements for it.
+Conversely, the lowest level of detail may not be sufficient to provide effective accountability. This depends on the data processing which is being authorised and legal requirements for it.
 
 For that reason it's important to decide for different use cases which level of detail is required and appropriate. Aiming for the highest level of detail for all authorization decisions is thus not necessary.

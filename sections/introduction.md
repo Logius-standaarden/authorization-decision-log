@@ -6,7 +6,7 @@ Additionally, it includes a non-normative outline introducing the concerns, prin
 
 ## Purpose of this standard
 
-This standard defines a uniform approach for logging [=authorization decisions=], enabling organizations to provide effective accountability for historical decisions.
+This standard defines a uniform approach for logging [=authorization decisions=], enabling organisations to provide effective accountability for historical decisions.
 
 The standard provides a structured format for all contextual and environmental parameters that affect decisions. A full implementation of the standard allows historical decisions to be [=replayed=] for analysis.
 
@@ -26,9 +26,9 @@ This is materially different from the noun "authorization" which typically refer
 
 A decision produced in the [=authorization=] process, determining whether a particular request is allowed or denied, fully or partially. Authorization decisions are the units recorded in an [=Authorization Decision Log=].
 
-<dfn data-lt="eam">Externalized Authorization Management</dfn>
+<dfn data-lt="eam">Externalised Authorization Management</dfn>
 
-Externalized Authorization Management (EAM) is an architectural pattern in which [=authorization decisions=] are made in a different component than the component that enforces the decision.
+Externalised Authorization Management (EAM) is an architectural pattern in which [=authorization decisions=] are made in a different component than the component that enforces the decision.
 
 <dfn data-lt="logs">Log</dfn>
 
