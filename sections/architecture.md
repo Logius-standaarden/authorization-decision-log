@@ -11,7 +11,7 @@ The inputs for records in the <a>Authorization Decision Log</a> come from the fo
 
 In a federated context, such as introduced by [[FSC-Core]], both the consumer outway and provider inway function as a <a>PEP</a> for incoming and outgoing requests. Both the consumer and the provider ask an internal <a>PDP</a> to decide on allowing the request. Both of these decisions can be logged using this standard.
 
-When combined with tracing headers per [[trace-context]] (also adopted by [[LDV]]) and the FSC Transaction ID used in [[FSC-Logging]], this enables full traceability across complex multi-organizational processing chains.
+When combined with tracing headers per [[trace-context]] (also adopted by [[LDV]]) and the FSC Transaction ID used in [[FSC-Logging]], this enables full traceability across complex multi-organisational processing chains.
 
 See the sequence diagram below for an example of such a flow.
 
@@ -22,7 +22,7 @@ See the sequence diagram below for an example of such a flow.
 
 ## Components
 
-The standard [=EAM=] architecture has the following conceptual components. These can be deployed as standalone applications, combined in various configurations, or even implemented within a single monolithic application.
+The standard [=EAM=] architecture has the following conceptual components. These can be deployed as stand-alone applications, combined in various configurations, or even implemented within a single monolithic application.
 
 <dfn data-lt="ADL">Authorization Decision Log</dfn>
 
@@ -50,11 +50,11 @@ These are architectural roles, not deployment boundaries. A single application c
 
 ## Scope
 
-The specification defines an interface for persisting [=log records=]. This is the component that MUST be consistent across organizations to ensure interoperability.
+The specification defines an interface for persisting [=log records=]. This is the component that MUST be consistent across organisations to ensure interoperability.
 
 Any [=authorization decision=] representable in the [[AuthZEN]] information model is in scope of this standard, regardless of the wire protocol by which the decision is delivered.
 
-The management of a [=log=], however, is left to the discretion of individual implementations. Consequently, the specification does NOT define behavior or interfaces for:
+The management of a [=log=], however, is left to the discretion of individual implementations. Consequently, the specification does NOT define behaviour or interfaces for:
 
 - deleting or modifying [=log records=]
 - managing access to the [=log=]

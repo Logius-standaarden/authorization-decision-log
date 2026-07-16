@@ -1,6 +1,6 @@
 # Specifications
 
-This section provides the specification for the protocols and interfaces to be used and the expected behavior of the components.
+This section provides the specification for the protocols and interfaces to be used and the expected behaviour of the components.
 
 <p class="note" title="Information model independence">
 The fields defined in this section form an information model for an authorization-decision [=log record=]. The model is independent of any particular telemetry framework; conformant records can be emitted via any transport, provided the record carries the fields specified here. The model is intentionally compatible in shape with [[?OpenTelemetry]], so that organisations already operating an OpenTelemetry pipeline can carry [=log records=] on existing infrastructure without conversion.
@@ -16,11 +16,11 @@ When using HTTP-based protocols (e.g., HTTP/1.1 [[RFC9112]] or HTTP/2 [[RFC9113]
 
 For non-HTTP protocols (e.g., gRPC, messaging systems), implementations MUST provide equivalent [=trace context=] propagation semantics, preserving `trace_id`, `span_id`, and parent relationships across boundaries. Where the protocol has no formally standardised [[trace-context]] binding, OpenTelemetry context propagation or another widely adopted convention with equivalent semantics is sufficient.
 
-## Behavior
+## Behaviour
 
 ### Encryption
 
-The [=log=] MUST enforce TLS on connections, in accordance with the standard practice established within the organization.
+The [=log=] MUST enforce TLS on connections, in accordance with the standard practice established within the organisation.
 
 ### Tracing
 
@@ -41,7 +41,7 @@ When a [=trace context=] is received from another organisation, the receiving co
 
 Logging of [=authorization decisions=] is independent of the `sampled` bit in `traceparent`: that bit governs telemetry sampling only, and [=log records=] are accountability records that MUST be produced regardless. ADL emitters MUST NOT modify the `sampled` flag.
 
-When propagating, components MUST follow the propagation rules in <a data-cite="trace-context#mutating-the-tracestate-field">section 3.5 (Mutating the tracestate Field)</a> of [[trace-context]] — in particular, if a component does not modify `traceparent`, it MUST NOT modify `tracestate`.
+When propagating, components MUST follow the propagation rules in <a data-cite="trace-context#mutating-the-tracestate-field">section 3.5 (Mutating the `tracestate` Field)</a> of [[trace-context]] — in particular, if a component does not modify `traceparent`, it MUST NOT modify `tracestate`.
 
 <figure>
     <div class="mermaid" data-figure-name="decision-trace.mermaid"></div>
@@ -130,7 +130,7 @@ Implementations that do not deliver decisions through the [[AuthZEN]] HTTP API s
 
 ### `timestamp`
 
-The `timestamp` field represents the exact point in time when the [=authorization decision=] was made. The timestamp MUST be encoded as the number of milliseconds since the Unix epoch (1970-01-01T00:00:00Z), as an unsigned 64-bit integer.
+The `timestamp` field represents the exact point in time when the [=authorization decision=] was made. The timestamp MUST be encoded as the number of milliseconds since the Unix epoch (`1970-01-01T00:00:00Z`), as an unsigned 64-bit integer.
 
 ### `status`
 
@@ -178,8 +178,8 @@ The `adl.core.response` attribute is a [=source=] reference to the output of the
 
 The response MUST be retrievable when [`status`](#status) is `Unset` or `Ok` and MAY be omitted when [`status`](#status) is `Error`.
 
-<p class="note" title="Search responses and data minimization">
-Responses to the Search APIs — in particular `adl.search_subject` and `adl.search_resource` — typically enumerate sets of subjects or resources for which a permission applies. Logging these enumerations in full can itself constitute a privacy exposure beyond the original request. Implementers SHOULD pay particular attention to <a href="#data-minimization">data minimization</a> when logging Search API responses.
+<p class="note" title="Search responses and data minimisation">
+Responses to the Search APIs — in particular `adl.search_subject` and `adl.search_resource` — typically enumerate sets of subjects or resources for which a permission applies. Logging these enumerations in full can itself constitute a privacy exposure beyond the original request. Implementers SHOULD pay particular attention to <a href="#data-minimisation">data minimisation</a> when logging Search API responses.
 </p>
 
 #### `adl.core.policies` {#adl-core-policies}
