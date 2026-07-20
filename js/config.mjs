@@ -2,15 +2,12 @@ import { loadRespecWithConfiguration } from "https://logius-standaarden.github.i
 import { generateMermaidFigures } from "https://logius-standaarden.github.io/publicatie/respec/plugins/mermaid.mjs";
 
 loadRespecWithConfiguration({
-  useLogo: true,
-  useLabel: true,
-  license: "cc-by",
-  specStatus: "WV",
+  specStatus: "DEF",
   specType: "ST",
   pubDomain: "ftv",
   shortName: "adl",
-  publishDate: "2024-05-19",
-  publishVersion: "0.0.1",
+  publishDate: "2026-06-25",
+  publishVersion: "1.0.0",
   spellcheck: false,
   // TODO: verwijder voor publicatie
   prevVersion: [],
