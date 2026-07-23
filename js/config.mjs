@@ -9,9 +9,7 @@ loadRespecWithConfiguration({
   publishDate: "2026-06-25",
   publishVersion: "1.0.0",
   spellcheck: false,
-  // TODO: verwijder voor publicatie
   prevVersion: [],
-  latestVersion: "https://logius-standaarden.github.io/authorization-decision-log/",
   editors:
     [
       {
