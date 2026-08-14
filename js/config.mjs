@@ -2,7 +2,7 @@ import { loadRespecWithConfiguration } from "https://logius-standaarden.github.i
 import { generateMermaidFigures } from "https://logius-standaarden.github.io/publicatie/respec/plugins/mermaid.mjs";
 
 loadRespecWithConfiguration({
-  specStatus: "DEF",
+  specStatus: "WV",
   specType: "ST",
   pubDomain: "ftv",
   shortName: "adl",
