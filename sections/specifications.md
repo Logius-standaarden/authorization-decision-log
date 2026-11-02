@@ -82,6 +82,14 @@ A [=log record=] MAY be minimised before it is persisted by erasing values from 
 - Erasure or masking of the [=log record=] does not affect [=source=] references: a [=source=] reference remains valid, and the retention obligation in [Data Retention](#data-retention) remains in force. Organisations that want the referenced data minimised as well do so at the [=source=].
 - When either attribute is present, the [=log record=] no longer carries the complete decision. Consumers MUST treat the [=log record=] as intentionally incomplete at the listed locations rather than as malformed, and [=replay=] of the decision may be impossible.
 
+**Redaction across correlated logs.** Erasing a value from a [=log record=] does not have to make it unavailable altogether. When the same decision is also recorded in another [=log=] that shares the [=trace context=], such as [[LDV]], a value MAY be erased from the [=log record=] and retrieved from the correlated record when needed, or the other way round. The erased location is declared in `adl.redact.erased` as usual; the `trace_id` and `span_id` of the [=log record=] are the key on which the two records are joined. An organisation relying on this pattern MUST keep the correlated record retrievable for the full retention period of the [=log record=], as it must for [=source=] references, and SHOULD document in its logging policy which [=log=] holds which values.
+
+<aside class="example" title="BSN erased from the log record and recovered from LDV">
+A [=PDP=] evaluates a request to read a citizen's dossier. The request carries the citizen service number (BSN) as subject identifier. The organisation records the BSN in [[LDV]] as `dpl.core.data_subject_id` and erases it from the [=log record=], declaring `/body/adl.core.request/subject/id` in `adl.redact.erased`. A subject-access request is served from LDV. An audit of the decision joins the [=log record=] to the LDV record on `trace_id` and `span_id` and recovers the BSN from there.
+
+Conversely, an organisation whose LDV carries only a pseudonym can keep the BSN in the [=log record=] under stricter access control and resolve it from the [=Authorization Decision Log=] when a subject-access request requires it.
+</aside>
+
 ## Interface {#Interface}
 
 A [=log record=] MUST contain the following mandatory fields and MAY contain the optional fields:
