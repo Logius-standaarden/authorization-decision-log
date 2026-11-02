@@ -32,11 +32,11 @@ For implementations within Dutch public-sector organisations, retention is also 
 
 [=Logs=] that have exceeded their defined retention period should be automatically and securely purged in line with the secure-deletion control in section 8.10 of [[?ISO/IEC 27002:2022]].
 
-When `attributes.adl.core.*` carries [=source=] references rather than raw payloads, the upstream [=sources=] MUST remain retrievable for the full retention period of the referencing [=log records=]; otherwise the accountability claim of the referencing [=log record=] is invalidated. Coordination of upstream retention is the responsibility of the producing organisation and should be documented in its logging policy. See [[[#source-references]]] for the related Versioned, Temporal, and Logged source patterns.
+When `attributes.adl.core.*` carries [=source=] references rather than raw payloads, the upstream [=sources=] must remain retrievable for the full retention period of the referencing [=log records=]; otherwise the accountability claim of the referencing [=log record=] is invalidated. Coordination of upstream retention is the responsibility of the producing organisation and should be documented in its logging policy. See [[[#source-references]]] for the related Versioned, Temporal, and Logged source patterns.
 
 ### Transparency and Subject Rights
 
-If [=logs=] contain personal data, they should be designed to support data subject access requests under [[?AVG]] art. 15. To enable subject-access queries that span ADL and [[LDV]], implementations SHOULD include the `dpl.core.data_subject_id` attribute defined by [[LDV]] in `attributes` when the request involves personal data. This anchors the [=log record=] to the data subject in the same convention used by LDV.
+If [=logs=] contain personal data, they should be designed to support data subject access requests under [[?AVG]] art. 15. To enable subject-access queries that span ADL and [[LDV]], implementations should include the `dpl.core.data_subject_id` attribute defined by [[LDV]] in `attributes` when the request involves personal data. This anchors the [=log record=] to the data subject in the same convention used by LDV.
 
 The [=log=]'s structure, purpose, and retention are to be documented in the organisation's Register of Processing Activities, as required by [[?AVG]] art. 30.
 
