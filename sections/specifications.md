@@ -72,6 +72,16 @@ If a cached decision is nevertheless applied to a new request, that application 
 
 Ingestion of [=log records=] into the [=Authorization Decision Log=] MUST be idempotent: re-submitting the same [=log record=] — for example as a result of a queue redelivery in the write-ahead log pattern described in [[[#architecture]]] — MUST NOT produce a duplicate persisted record. The idempotency key is implementation-defined; common choices are the pair `(trace_id, span_id)` or a content-hash of the [=log record=].
 
+### Redaction {#redaction}
+
+A [=log record=] MAY be minimised before it is persisted by erasing values from it or by masking them with a substitute, for example to meet the [data minimisation](#data-minimisation) obligations of the producing organisation. When this is done, every affected location MUST be declared in [`adl.redact.erased`](#adl-redact-erased) or [`adl.redact.masked`](#adl-redact-masked).
+
+- Erasure and masking MAY be applied by the emitting component or by the [=log=] on ingestion, but MUST be applied before the [=log record=] is persisted. Whichever component applies it records the corresponding attribute.
+- A location MUST NOT be listed in both `adl.redact.erased` and `adl.redact.masked`.
+- A substitute MUST NOT allow the original value to be derived from the [=log record=] alone. A fixed marker, a hash, a pseudonym, or a truncation to the last few characters or digits of the original value are acceptable, provided the remaining information does not identify the original value on its own. Re-identification, if supported at all, is governed by the organisation's logging policy.
+- Erasure or masking of the [=log record=] does not affect [=source=] references: a [=source=] reference remains valid, and the retention obligation in [Data Retention](#data-retention) remains in force. Organisations that want the referenced data minimised as well do so at the [=source=].
+- When either attribute is present, the [=log record=] no longer carries the complete decision. Consumers MUST treat the [=log record=] as intentionally incomplete at the listed locations rather than as malformed, and [=replay=] of the decision may be impossible.
+
 ## Interface {#Interface}
 
 A [=log record=] MUST contain the following mandatory fields and MAY contain the optional fields:
@@ -148,7 +158,7 @@ The `attributes` object contains [=source=] references and metadata for the [=au
 
 Each `adl.core.*` entry in `attributes` MUST be a [=source=] reference: a value sufficient to retrieve the referenced data. Raw payloads MUST NOT be inlined in `attributes`; they belong in [`body`](#body). The patterns in [[[#source-references]]] illustrate common forms of [=source=] references. The retention obligation that follows from this — keeping the upstream [=source=] available for as long as the [=log record=] references it — is treated in [Data Retention](#data-retention).
 
-The following `adl.*` attributes are defined by this specification. The five conditional attributes are present when the corresponding aspect of the [=authorization decision=] is to be made retrievable.
+The following `adl.*` attributes are defined by this specification. The `adl.core.*` attributes are present when the corresponding aspect of the [=authorization decision=] is to be made retrievable. The `adl.redact.*` attributes describe redaction applied to the [=log record=] itself, and MUST be present when values have been erased from or masked in the record (see [[[#redaction]]]).
 
 | Attribute | Type | Mandatory? |
 | --- | --- | --- |
@@ -157,6 +167,8 @@ The following `adl.*` attributes are defined by this specification. The five con
 | [`adl.core.policies`](#adl-core-policies) | object | conditional |
 | [`adl.core.information`](#adl-core-information) | object | conditional |
 | [`adl.core.configuration`](#adl-core-configuration) | object | conditional |
+| [`adl.redact.erased`](#adl-redact-erased) | string[] | conditional |
+| [`adl.redact.masked`](#adl-redact-masked) | string[] | conditional |
 | [`adl.fsc.transaction_id`](#adl-fsc-transaction_id) | string | conditional |
 
 When an `adl.core.*` field is recorded in the [=log record=], the data MUST be carried in exactly one of two locations:
@@ -224,6 +236,70 @@ A configuration [=source=] could reference:
 - The Git hash of an IaaS definition, such as a Terraform repository
 
 </aside>
+
+#### `adl.redact.erased` {#adl-redact-erased}
+
+The `adl.redact.erased` attribute lists the locations in the [=log record=] from which a value has been removed before the record was persisted, for example to meet the [data minimisation](#data-minimisation) obligations of the producing organisation.
+
+It is an array of strings. Each string MUST be a JSON Pointer [[RFC6901]] into the [=log record=], evaluated against the record as it was before any erasure or masking was applied. Each pointer MUST identify a location within `body` or `attributes`. The referenced value MUST NOT be present in the persisted [=log record=]. The rules for applying erasure and masking are given in [[[#redaction]]].
+
+#### `adl.redact.masked` {#adl-redact-masked}
+
+The `adl.redact.masked` attribute lists the locations in the [=log record=] whose value has been replaced by a substitute before the record was persisted, for example a fixed marker, a hash, a pseudonym, or a truncation that keeps only the last few characters or digits of the original value.
+
+It is an array of strings. Each string MUST be a JSON Pointer [[RFC6901]] into the [=log record=], evaluated against the record as it was before any erasure or masking was applied. Each pointer MUST identify a location within `body` or `attributes`. The referenced location MUST be present in the persisted [=log record=] and MUST carry the substitute value. The rules for applying erasure and masking are given in [[[#redaction]]].
+
+<aside class="example" title="Log record with a pseudonymised subject, a masked e-mail address and an erased property">
+
+```json
+{
+    "trace_id": "28dbeec32e77635cc19bc3204ec56c41",
+    "span_id": "9f2c4a7e1b3d5f60",
+    "event_name": "adl.access_evaluation",
+    "timestamp": 1757240136089,
+    "status": "Unset",
+    "attributes": {
+        "adl.core.policies": {
+            "git": "e4c15a063048367da367d5588d703b5e4a6b760e"
+        },
+        "adl.redact.masked": [
+            "/body/adl.core.request/subject/id",
+            "/body/adl.core.request/subject/properties/email"
+        ],
+        "adl.redact.erased": [ "/body/adl.core.request/resource/properties/bsn" ]
+    },
+    "body": {
+        "adl.core.request": {
+            "subject": {
+                "type": "user",
+                "id": "6c1e7f2a9d0b4e3c",
+                "properties": {
+                    "email": "g******@e******.com"
+                }
+            },
+            "action": {
+                "name": "read"
+            },
+            "resource": {
+                "type": "dossier",
+                "id": "d-20250907-0142",
+                "properties": {
+                    "classification": "confidential"
+                }
+            }
+        },
+        "adl.core.response": {
+            "decision": true
+        }
+    }
+}
+```
+
+</aside>
+
+<p class="note" title="Alignment with OPA decision logs">
+The names and semantics of these two attributes follow the <code>erased</code> and <code>masked</code> fields of [[?OPA-DecisionLogs]], in which a mask policy removes or upserts values in a decision log event. Decision logs produced by such an engine can therefore be mapped onto these attributes without transformation of the pointer values, apart from the prefix of the pointer.
+</p>
 
 #### `adl.fsc.transaction_id` {#adl-fsc-transaction_id}
 

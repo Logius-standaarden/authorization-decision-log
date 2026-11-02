@@ -94,6 +94,11 @@ loadRespecWithConfiguration({
       title: "OpenTelemetry Protocol (OTLP) Specification",
       publisher: "Cloud Native Computing Foundation"
     },
+    "OPA-DecisionLogs": {
+      href: "https://www.openpolicyagent.org/docs/latest/management-decision-logs/",
+      title: "Open Policy Agent: Decision Logs",
+      publisher: "Open Policy Agent contributors",
+    },
     "LDV": {
       href: "https://logius-standaarden.github.io/logboek-dataverwerkingen/",
       title: "Logboek Dataverwerkingen",
