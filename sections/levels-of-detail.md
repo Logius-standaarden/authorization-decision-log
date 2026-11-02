@@ -15,7 +15,7 @@ We have identified four levels of detail, in order from least to most detail. Ea
 At the most basic level only the decision request and the decision response are logged.
 
 <p class="note" title="Engine boundaries">
-The decision request and response MAY contain all information required for an audit log, as described by [[?ISO/IEC 27002:2022]] and [[?BIO2]]. Where that is the case, and all auditable actions are decided on by the [=PDP=], the [=Authorization Decision Log=] MAY be combined with logs of other auditable events and used as an audit log.
+The decision request and response may contain all information required for an audit log, as described by [[?ISO/IEC 27002:2022]] and [[?BIO2]]. Where that is the case, and all auditable actions are decided on by the [=PDP=], the [=Authorization Decision Log=] may be combined with logs of other auditable events and used as an audit log.
 </p>
 
 At this level of detail [=log records=] contain all keys that are described as mandatory in [[[#Interface]]].
@@ -394,7 +394,7 @@ In the example below we extend the holiday approval request example by describin
 
 <p class="note" title="Configuration as raw data in body">
 In this example the `configuration` is raw data — a few key/value pairs describing the OPA version and the can-sign-api endpoint URL — rather than a pointer to a coherent external configuration source. It therefore belongs in <a href="#body"><code>body</code></a> alongside `request` and `response`. <br/><br/>
-When configuration *is* available from an external source (e.g., a Git-versioned IaaS definition or a configuration management system), the `attributes.adl.core.configuration` reference pattern (analogous to `adl.core.policies`) SHOULD be used instead.
+When configuration *is* available from an external source (e.g., a Git-versioned IaaS definition or a configuration management system), the `attributes.adl.core.configuration` reference pattern (analogous to `adl.core.policies`) should be used instead.
 </p>
 
 ## Implications of levels
