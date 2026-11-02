@@ -298,7 +298,7 @@ It is an array of strings. Each string MUST be a JSON Pointer [[RFC6901]] into t
 </aside>
 
 <p class="note" title="Alignment with OPA decision logs">
-The names and semantics of these two attributes follow the <code>erased</code> and <code>masked</code> fields of [[?OPA-DecisionLogs]], in which a mask policy removes or upserts values in a decision log event. Decision logs produced by such an engine can therefore be mapped onto these attributes without transformation of the pointer values, apart from the prefix of the pointer.
+The names and semantics of these two attributes follow the <code>erased</code> and <code>masked</code> fields of [[?OPA-DecisionLogs]], in which a mask policy removes or replaces values in a decision log event. Decision logs produced by such an engine can therefore be mapped onto these attributes without transformation of the pointer values, apart from the prefix of the pointer.
 </p>
 
 #### `adl.fsc.transaction_id` {#adl-fsc-transaction_id}
