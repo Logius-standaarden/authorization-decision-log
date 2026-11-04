@@ -74,18 +74,21 @@ Ingestion of [=log records=] into the [=Authorization Decision Log=] MUST be ide
 
 ### Redaction {#redaction}
 
-A [=log record=] MAY be minimised before it is persisted by erasing values from it or by masking them with a substitute, for example to meet the [data minimisation](#data-minimisation) obligations of the producing organisation. When this is done, every affected location MUST be declared in [`adl.redact.erased`](#adl-redact-erased) or [`adl.redact.masked`](#adl-redact-masked).
+A [=log record=] MAY be redacted before it is persisted. For example, to meet the [data minimisation](#data-minimisation) obligations of the producing organisation.
 
-- Erasure and masking MAY be applied by the emitting component or by the [=log=] on ingestion, but MUST be applied before the [=log record=] is persisted. Whichever component applies it records the corresponding attribute.
+Redaction can be done by erasing values from it or by masking them with a substitute. When applied, every affected location MUST be declared in [`adl.redact.erased`](#adl-redact-erased) or [`adl.redact.masked`](#adl-redact-masked).
+
+- Redaction MAY be applied by any component involved in [[[#writing-a-log-record]]], and by more than one of them, but MUST be complete before the [=log record=] is persisted. The two attributes are cumulative: each component adds the locations it redacted. Which component redacted a location is not recorded; the attributes describe the [=log record=], not the process that produced it.
 - A location MUST NOT be listed in both `adl.redact.erased` and `adl.redact.masked`.
-- A substitute MUST NOT allow the original value to be derived from the [=log record=] alone. A fixed marker, a hash, a pseudonym, or a truncation to the last few characters or digits of the original value are acceptable, provided the remaining information does not identify the original value on its own. Re-identification, if supported at all, is governed by the organisation's logging policy.
+- A substitute MUST NOT allow the original value to be derived from the [=log record=] alone. A fixed marker, a keyed hash (e.g. HMAC) whose key is not stored with, or derivable from, the log, a pseudonym, or partial masking that keeps only a few characters or digits of the original value are acceptable, provided the remaining information does not identify the original value on its own. Re-identification, if supported at all, is governed by the organisation's logging policy.
 - Erasure or masking of the [=log record=] does not affect [=source=] references: a [=source=] reference remains valid, and the retention obligation in [Data Retention](#data-retention) remains in force. Organisations that want the referenced data minimised as well do so at the [=source=].
 - When either attribute is present, the [=log record=] no longer carries the complete decision. Consumers MUST treat the [=log record=] as intentionally incomplete at the listed locations rather than as malformed, and [=replay=] of the decision may be impossible.
+- After redaction, `body.adl.core.request` or `body.adl.core.response` MAY no longer be a valid [[AuthZEN]] message, for example when a field that [[AuthZEN]] requires has been erased. Consumers MUST NOT reject a [=log record=] for that reason alone. Whether a redacted message must remain valid is for the organisation to decide: masking keeps it valid, erasure does not.
 
 **Redaction across correlated logs.** Erasing a value from a [=log record=] does not have to make it unavailable altogether. When the same decision is also recorded in another [=log=] that shares the [=trace context=], such as [[LDV]], a value MAY be erased from the [=log record=] and retrieved from the correlated record when needed, or the other way round. The erased location is declared in `adl.redact.erased` as usual; the `trace_id` and `span_id` of the [=log record=] are the key on which the two records are joined. An organisation relying on this pattern MUST keep the correlated record retrievable for the full retention period of the [=log record=], as it must for [=source=] references, and SHOULD document in its logging policy which [=log=] holds which values.
 
 <aside class="example" title="BSN erased from the log record and recovered from LDV">
-A [=PDP=] evaluates a request to read a citizen's dossier. The request carries the citizen service number (BSN) as subject identifier. The organisation records the BSN in [[LDV]] as `dpl.core.data_subject_id` and erases it from the [=log record=], declaring `/body/adl.core.request/subject/id` in `adl.redact.erased`. A subject-access request is served from LDV. An audit of the decision joins the [=log record=] to the LDV record on `trace_id` and `span_id` and recovers the BSN from there.
+A [=PDP=] evaluates a request to read a citizen's dossier. The request carries the citizen service number (BSN) as subject identifier. The organisation records the BSN in [[LDV]] as `dpl.core.data_subject_id` and erases it from the [=log record=], declaring `/body/adl.core.request/subject/id` in `adl.redact.erased`. The request in the [=log record=] is then no longer a valid [[AuthZEN]] message, because the subject identifier is missing; the [=log record=] is still conformant, as the erasure is declared. A subject-access request is served from LDV. An audit of the decision joins the [=log record=] to the LDV record on `trace_id` and `span_id` and recovers the BSN from there.
 
 Conversely, an organisation whose LDV carries only a pseudonym can keep the BSN in the [=log record=] under stricter access control and resolve it from the [=Authorization Decision Log=] when a subject-access request requires it.
 </aside>
@@ -323,8 +326,8 @@ The [=Authorization Decision Log=] and the FSC Log have the same granularity and
 
 The `body` field carries the raw `adl.core.*` payloads. It is an object that MAY contain any of the following keys:
 
-- `adl.core.request` - full request in [[AuthZEN]] format
-- `adl.core.response` - full response in [[AuthZEN]] format
+- `adl.core.request` - full request in [[AuthZEN]] format, unless redacted (see [[[#redaction]]])
+- `adl.core.response` - full response in [[AuthZEN]] format, unless redacted (see [[[#redaction]]])
 - `adl.core.policies` - full policies that affected the decision
 - `adl.core.information` - full information that affected the decision
 - `adl.core.configuration` - full configuration that affected the decision
