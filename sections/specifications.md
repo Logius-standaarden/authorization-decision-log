@@ -78,7 +78,7 @@ A [=log record=] MAY be redacted before it is persisted. For example, to meet th
 
 Redaction can be done by erasing values from it or by masking them with a substitute. When applied, every affected location MUST be declared in [`adl.redact.erased`](#adl-redact-erased) or [`adl.redact.masked`](#adl-redact-masked).
 
-- Redaction MAY be applied by any component involved in [[[#writing-a-log-record]]], and by more than one of them, but MUST be complete before the [=log record=] is persisted. The two attributes are cumulative: each component adds the locations it redacted. Which component redacted a location is not recorded; the attributes describe the [=log record=], not the process that produced it.
+- Erasure and masking MUST be applied by the [=PDP=] before it writes the [=log record=] to durable storage.
 - A location MUST NOT be listed in both `adl.redact.erased` and `adl.redact.masked`.
 - A substitute MUST NOT allow the original value to be derived from the [=log record=] alone. A fixed marker, a keyed hash (e.g. HMAC) whose key is not stored with, or derivable from, the log, a pseudonym, or partial masking that keeps only a few characters or digits of the original value are acceptable, provided the remaining information does not identify the original value on its own. Re-identification, if supported at all, is governed by the organisation's logging policy.
 - Erasure or masking of the [=log record=] does not affect [=source=] references: a [=source=] reference remains valid, and the retention obligation in [Data Retention](#data-retention) remains in force. Organisations that want the referenced data minimised as well do so at the [=source=].
