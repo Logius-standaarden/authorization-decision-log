@@ -20,6 +20,8 @@ A logging policy that manages what is logged based on risk should be in place. W
 
 Implementers should consider pseudonymisation and anonymisation for personal data, in line with the data-masking control in section 8.11 of [[?ISO/IEC 27002:2022]]. For example, personal identifiers can be hashed or aliased and location data can be randomised.
 
+When values are removed from or replaced in a [=log record=] before it is persisted, [[[#redaction]]] requires the affected locations to be declared in [`adl.redact.erased`](#adl-redact-erased) and [`adl.redact.masked`](#adl-redact-masked). This lets consumers distinguish a deliberately minimised [=log record=] from an incomplete one and makes the applied minimisation itself auditable.
+
 When aggregate statistics, such as decisions per type per time period, are sufficient, implementers should consider using aggregation as a method of data minimisation and anonymisation.
 
 ### Data Retention
